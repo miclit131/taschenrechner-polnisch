@@ -25,6 +25,6 @@ public class App {
         log.debug("'src/main/resources/log4j2.xml' to suit your needs.");
         log.debug("This config file 'log4j2.xml' will result in 'A1.log'");
         log.debug("file containing logging output as well.");
-        System.out.println("Noch mehr Hello World!!!");
+        System.out.println("Noch mehr Hello Class!!!");
     }
 }
