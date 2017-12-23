@@ -2,12 +2,12 @@ package de.hdm_stuttgart.mi.se1;
 
 import java.util.Stack;
 
-public class SetupCalculator {
+public class SetupBot {
 
-    /*
+    /**
     *Main setup method for the calculator
     *
-    * @param String
+    * @param unsortedString
     *
     * splits the string internal into an String[]
     * then filters it:
@@ -49,10 +49,10 @@ public class SetupCalculator {
 
     }
 
-    /*
+    /**
     * Helping Method for the filter-process
     *
-    * @param String
+    * @param undefinedString
     *
     * takes input String into a Switch
     * and compares it with the defined Operators

@@ -37,7 +37,7 @@ public class App {
 
         //setting the calculation up
 
-        SetupCalculator.stringFilterOperatorsIntoArrayAndEverythingElseIntoStack(InputString);
+        SetupBot.stringFilterOperatorsIntoArrayAndEverythingElseIntoStack(InputString);
 
         //TODO unprofessional unity test, still need to implement
         //TODO unity tests for stringFilterOperatorsIntoArrayAndEverythingElseIntoStack and isOperator methods in SetupCalculator class
