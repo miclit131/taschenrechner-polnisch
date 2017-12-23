@@ -3,6 +3,10 @@ package de.hdm_stuttgart.mi.se1;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.Stack;
+
 
 /**
  * A simple http://logging.apache.org/log4j/2.x demo,
@@ -18,17 +22,37 @@ public class App {
      *
      * @param args Yet unused
      */
-    public static void main( String[] args ) {
-        System.out.println( "Hello World!" );
-        
+    static String[] calculationOperators;
+    static Stack<String> inputValuesForCalculation = new Stack<>();
+
+    public static void main(String[] args) {
+        /*
+        * Scanner for the main source of the InputStream / Userinterface
+        * .nextLine() takes the whole scannerInput
+        * .next() only takes next string / no sentences
+         */
+        final Scanner InputStringScanner = new Scanner(System.in);
+        System.out.println("Please enter your entry Values to calculate with");
+        String InputString = InputStringScanner.nextLine();
+
+        //setting the calculation up
+
+        SetupCalculator.stringFilterOperatorsIntoArrayAndEverythingElseIntoStack(InputString);
+
+        //TODO unprofessional unity test, still need to implement
+        //TODO unity tests for stringFilterOperatorsIntoArrayAndEverythingElseIntoStack and isOperator methods in SetupCalculator class
+        /*
+        System.out.println("InputString: " + InputString);
+        System.out.println("Operatoren: " + Arrays.toString(App.calculationOperators));
+        System.out.println("Operator an stelle 1: " + App.calculationOperators[0]);
+        System.out.println(App.inputValuesForCalculation.toString());
+        System.out.println("oberster wert im stack " + App.inputValuesForCalculation.pop());
+
         log.debug("With respect to logging you may want to configure file ");
         log.debug("'src/main/resources/log4j2.xml' to suit your needs.");
         log.debug("This config file 'log4j2.xml' will result in 'A1.log'");
         log.debug("file containing logging output as well.");
-        System.out.println("Noch mehr Hello Class xoxo!!!");
-        for(int i=0;i<1000;i++) {
-            System.out.println("SpAM IT LIKE BAOS!");
-        }
-        System.out.println("Es funktioniiieeert");
+        */
+
     }
 }
