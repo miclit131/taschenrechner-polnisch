@@ -30,7 +30,7 @@ public class App {
         * Scanner for the main source of the InputStream / Userinterface
         * .nextLine() takes the whole scannerInput
         * .next() only takes next string / no sentences
-         */
+        */
         final Scanner InputStringScanner = new Scanner(System.in);
         System.out.println("Please enter your entry Values to calculate with");
         String InputString = InputStringScanner.nextLine();
@@ -47,12 +47,12 @@ public class App {
         System.out.println("Operator an stelle 1: " + App.calculationOperators[0]);
         System.out.println(App.inputValuesForCalculation.toString());
         System.out.println("oberster wert im stack " + App.inputValuesForCalculation.pop());
-
+*/
         log.debug("With respect to logging you may want to configure file ");
         log.debug("'src/main/resources/log4j2.xml' to suit your needs.");
         log.debug("This config file 'log4j2.xml' will result in 'A1.log'");
         log.debug("file containing logging output as well.");
-        */
+
 
     }
 }
