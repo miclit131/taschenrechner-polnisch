@@ -13,7 +13,8 @@ import java.util.Stack;
  * see file resources/log4j2.xml for configuration options
  * and A1.log containing debugging output.
  */
-
+//TODO the programm can only work in one direction, (2+2)+((2*3)*5) is not possible. Also only works without literals at the moment
+//TODO programm makes no differences in + + 2 3 4 , 2 + 3 + 4, 2 3 + 4 + or 2 3 4 + + . Needs to be fixed so the TODO above  is possible to implement
 public class App {
     private static Logger log = LogManager.getLogger(App.class);
 
@@ -22,15 +23,15 @@ public class App {
      *
      * @param args Yet unused
      */
-    static String[] calculationOperators;
-    static Stack<String> inputValuesForCalculation = new Stack<>();
+    public static String[] calculationOperators;
+    public static Stack<Double> inputValuesForCalculation = new Stack<>();
 
     public static void main(String[] args) {
-        /*
-        * Scanner for the main source of the InputStream / Userinterface
-        * .nextLine() takes the whole scannerInput
-        * .next() only takes next string / no sentences
-        */
+        /**
+         * Scanner for the main source of the InputStream / Userinterface
+         * .nextLine() takes the whole scannerInput
+         * .next() only takes next string / no sentences
+         */
         final Scanner InputStringScanner = new Scanner(System.in);
         System.out.println("Please enter your entry Values to calculate with");
         String InputString = InputStringScanner.nextLine();
@@ -38,6 +39,9 @@ public class App {
         //setting the calculation up
 
         SetupBot.stringFilterOperatorsIntoArrayAndEverythingElseIntoStack(InputString);
+
+        // solving calculation and printing it out
+        System.out.println(SetupBot.solve());
 
         //TODO unprofessional unity test, still need to implement
         //TODO unity tests for stringFilterOperatorsIntoArrayAndEverythingElseIntoStack and isOperator methods in SetupCalculator class
