@@ -130,7 +130,7 @@ public class SetupBot {
                 MathOperation.add();
                 break;
             case "-":
-                MathOperation.substract();
+                MathOperation.subtract();
                 break;
             case "*":
                 MathOperation.mulitply();
@@ -156,7 +156,7 @@ public class SetupBot {
     private static void activateUnaryOperator(String undefinedCalculationOperation) {
         switch (undefinedCalculationOperation) {
             case "~":
-                MathOperation.unarySubstraction();
+                MathOperation.unarySubtraction();
                 break;
             case "sin":
                 MathOperation.sine();
