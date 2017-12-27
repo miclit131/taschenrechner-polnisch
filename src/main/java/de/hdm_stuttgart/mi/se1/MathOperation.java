@@ -43,7 +43,7 @@ public class MathOperation {
      * and puts the answer back on top of the  same stack<Double>
      */
     public static void mulitply() {
-        double answer = App.inputValuesForCalculation.pop() / App.inputValuesForCalculation.pop();
+        double answer = App.inputValuesForCalculation.pop() * App.inputValuesForCalculation.pop();
         App.inputValuesForCalculation.push(answer);
     }
 
@@ -59,6 +59,7 @@ public class MathOperation {
 
     //TODO Implementation of unarySubtraction
     public static void unarySubtraction() {
+        App.inputValuesForCalculation.push(-App.inputValuesForCalculation.pop());
     }
 
     //TODO Parameter is in radians not degree
