@@ -179,4 +179,231 @@ public class SetupBot {
                 break;
         }
     }
+
+    //TODO JavaDoc and include method into the programm , only use this method if string includes special signs otherwise performance ist damaged
+    //TODO use if before activating this method
+    // method for tracking Literals such as binary hexa or 2E10
+    public static String convertLiterals(String undefinedNumber){
+
+        StringBuffer preparedNumber= new StringBuffer("");
+        StringBuffer errorCalls=new StringBuffer("");
+
+        double numberValue=0;
+        boolean positive=true;
+        double exponentialNumber=0;
+        boolean positiveExponent = true;
+
+        int exponentialLiteralIndex;
+        if(undefinedNumber.lastIndexOf('E')==-1){
+            exponentialLiteralIndex=undefinedNumber.length();
+        }else{
+            exponentialLiteralIndex=undefinedNumber.lastIndexOf('E');
+        }
+
+        int decimalLiteralIndex;
+            if (undefinedNumber.indexOf(',') >= 0) {
+                decimalLiteralIndex = undefinedNumber.indexOf(',');
+            } else if (undefinedNumber.indexOf('.') >= 0) {
+                decimalLiteralIndex = undefinedNumber.indexOf('.');
+            }else if (exponentialLiteralIndex==-1){
+                decimalLiteralIndex=undefinedNumber.length()-1;
+            }else{
+                decimalLiteralIndex=exponentialLiteralIndex;
+            }
+//in case it is a Dezimal number
+        if(!(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='b')
+                &&!(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='x')
+                &&!(undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='b')
+                &&!(undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='x')) {
+
+            for (int i = 0; i < exponentialLiteralIndex; i++) {
+                int referencePoint = decimalLiteralIndex-1 ;
+                if (i > decimalLiteralIndex) {
+                    referencePoint = decimalLiteralIndex;
+                }
+                switch (undefinedNumber.charAt(i)) {
+                    case '1':numberValue = numberValue + 1 * Math.pow(10, (referencePoint - i));
+                    break;
+                    case '2':numberValue = numberValue + 2 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '3':numberValue = numberValue + 3 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '4':numberValue = numberValue + 4 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '5':numberValue = numberValue + 5 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '6':numberValue = numberValue + 6 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '7':numberValue = numberValue + 7 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '8':numberValue = numberValue + 8 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '9':numberValue = numberValue + 9 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '0':
+                        break;
+                    case '-':
+                        if (i == 0) {
+                            positive = false;
+                        } else {
+                            errorCalls.append("\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved " +
+                                    "\n>>||only use '-' in front of a number||");
+                        }
+                        break;
+                    case '.':
+                        if (i != decimalLiteralIndex) {
+                            errorCalls.append("\nCharacter:'.' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal " +
+                                    "\n>>||each number can only have one decimal Literal||");
+                        }
+                        break;
+                    case ',':
+                        if (i != decimalLiteralIndex) {
+                            errorCalls.append("\nCharacter:',' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal" +
+                                    "\n>>||each number can only have one decimal Literal||");
+                        }
+                        break;
+                    case 'e':
+                        if (i != 0 && i != 1) {
+                            //TODO what is when "e" stands within of a word which is  wrong as a whole
+                            errorCalls.append("\nCharacter:'e' at Index " + i + " of " + undefinedNumber + " is a literal for the euler number" +
+                                    "\n>>||the euler number is a Value itself and not a Part of a number||");
+                        }
+                        break;
+                    default:
+                        errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
+                                "\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -) for numbers or hexadecimal/binary numbers||");
+                        break;
+                }
+            }
+//case  if binary number
+        }else if(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='b'
+                ||undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='b'){
+            if (undefinedNumber.charAt(0) == '-') {
+                positive = false;
+            }
+            int referencePoint = decimalLiteralIndex-1 ;
+            for (int i = undefinedNumber.indexOf('0')+2; i < exponentialLiteralIndex; i++) {
+                switch (undefinedNumber.charAt(i)) {
+                    case '0':
+                        break;
+                    case '1':numberValue=numberValue+Math.pow(2,referencePoint-i);
+                        break;
+                    case '-':
+                        errorCalls.append("\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved" +
+                                    "\n>>||only use '-' in front of a number||");
+                        break;
+                    default:
+                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) +" at Index " + i + " of " + undefinedNumber + " can not be resolved " +
+                                "\n>>||only use 0 or 1 within binary numbers||");
+                        break;
+                }
+            }
+//case if hexadezimal  number
+        }else if(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='x'
+                ||undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='x'){
+                int lastIndexOfHexa=exponentialLiteralIndex-1;
+            if (undefinedNumber.charAt(0) == '-') {
+                positive = false;
+            }
+            if(exponentialLiteralIndex==undefinedNumber.length()-1){
+                lastIndexOfHexa=undefinedNumber.length()-1;
+            }
+
+            for (int i = undefinedNumber.indexOf('0')+2; i <=lastIndexOfHexa; i++) {
+                switch (undefinedNumber.charAt(i)) {
+                    case '0':
+                        break;
+                    case '1':numberValue=numberValue+1*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '2':numberValue=numberValue+2*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '3':numberValue=numberValue+3*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '4':numberValue=numberValue+4*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '5':numberValue=numberValue+5*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '6':numberValue=numberValue+6*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '7':numberValue=numberValue+7*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '8':numberValue=numberValue+8*Math.pow(16,lastIndexOfHexa-i);
+                        break;
+                    case '9':numberValue=numberValue+9*Math.pow(16,lastIndexOfHexa-i);
+                    break;
+                    case 'A':numberValue=numberValue+10*Math.pow(16,lastIndexOfHexa-i);
+                    break;
+                    case 'B':numberValue=numberValue+11*Math.pow(16,lastIndexOfHexa-i);
+                    break;
+                    case 'C':numberValue=numberValue+12*Math.pow(16,lastIndexOfHexa-i);
+                    break;
+                    case 'D':numberValue=numberValue+13*Math.pow(16,lastIndexOfHexa-i);
+                    break;
+                    case 'E':numberValue=numberValue+14*Math.pow(16,lastIndexOfHexa-i);
+                    break;
+                    case 'F':numberValue=numberValue+15*Math.pow(16,lastIndexOfHexa-i);
+                    break;
+                    default:
+                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) +" at Index " + i + " of " + undefinedNumber + " can not be resolved " +
+                                "\n>>||only use 0 - F within binary numbers||");
+                        break;
+                }
+            }
+        }
+// caculating exponent if exists
+        if(exponentialLiteralIndex!=-1 && exponentialLiteralIndex!=undefinedNumber.length()-1 ) {
+            for (int i=exponentialLiteralIndex+1;i<undefinedNumber.length();i++){
+                switch(undefinedNumber.charAt(i)){
+                    case '-':
+                        if(i==exponentialLiteralIndex+1) {
+                            positiveExponent=false;
+                        }else{
+                            errorCalls.append("\nCharacter:'-' at Index "+ i +" of " + undefinedNumber + " can not be resolved" +
+                                    "\n>>||only use '-' in front of a number||");
+                        }
+                    break;
+                    case '1': exponentialNumber=exponentialNumber+1*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '2': exponentialNumber=exponentialNumber+2*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '3': exponentialNumber=exponentialNumber+3*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '4': exponentialNumber=exponentialNumber+4*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '5': exponentialNumber=exponentialNumber+5*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '6': exponentialNumber=exponentialNumber+6*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '7': exponentialNumber=exponentialNumber+7*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '8': exponentialNumber=exponentialNumber+8*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '9': exponentialNumber=exponentialNumber+9*Math.pow(10,(undefinedNumber.length()-1-i));
+                        break;
+                    case '0':
+                        break;
+                    default:
+                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) + " of " + undefinedNumber + " can not be resolved" +
+                                "\n>>||please,only use natural numbers as exponent||");
+                        break;
+                }
+            }
+        }
+        if(positiveExponent && positive) {
+            preparedNumber.append(numberValue * Math.pow(10, exponentialNumber));
+        }
+        if(!positiveExponent && positive) {
+            preparedNumber.append( numberValue * Math.pow(10,(-1)* exponentialNumber));
+        }
+        if(positiveExponent && !positive) {
+            preparedNumber.append((-1)*numberValue * Math.pow(10,exponentialNumber));
+        }
+        if(!positiveExponent && !positive) {
+            preparedNumber.append((-1)* numberValue * Math.pow(10,(-1)* exponentialNumber));
+        }
+
+        preparedNumber.append(errorCalls);
+
+        return preparedNumber.toString();
+    }
 }

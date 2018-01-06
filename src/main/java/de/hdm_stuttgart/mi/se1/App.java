@@ -51,12 +51,14 @@ public class App {
         System.out.println("Operator an stelle 1: " + App.calculationOperators[0]);
         System.out.println(App.inputValuesForCalculation.toString());
         System.out.println("oberster wert im stack " + App.inputValuesForCalculation.pop());
-*/
+*//*
         log.debug("With respect to logging you may want to configure file ");
         log.debug("'src/main/resources/log4j2.xml' to suit your needs.");
         log.debug("This config file 'log4j2.xml' will result in 'A1.log'");
         log.debug("file containing logging output as well.");
-
-
+*/
+         //TODO play with me mates :) put in binary hexa or decimal numbers with . ,  E e 0b 0x into undefinedNumber to test it out please :o
+        // TODO die neues methode des Programms wird hier kurz getestet
+        System.out.println(SetupBot.convertLiterals("0x1.EE2"));
     }
 }
