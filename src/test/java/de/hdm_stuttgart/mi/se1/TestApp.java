@@ -14,7 +14,13 @@ public class TestApp {
      */
     @Test
     public void testSimpleAddition(){
-        //assertEquals(5, SetupBot.stringFilterOperatorsIntoArrayAndEverythingElseIntoStack("2 3 +"));
+     //   SetupBot.stringFilterOperatorsIntoArrayAndEverythingElseIntoStack("5");
+       // assertEquals(4, SetupBot.solve(),Math.pow(10,-14));
+
+        String testString="2 2 +";
+        String[] testArray=testString.split(" ");
+        SetupBot.sort(testArray);
+        assertEquals(4.0 , App.result,Math.pow(10,-14));
     }
     /**
      * Testing simple subtraction.

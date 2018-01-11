@@ -3,53 +3,88 @@ package de.hdm_stuttgart.mi.se1;
 import java.util.Stack;
 
 public class SetupBot {
+    private static StringBuffer preOperatorBuffer = new StringBuffer("");
+    private static Stack<Double> prePushStack = new Stack<>();
+    private static int currentIndex = 0;
+    private static boolean reading = true;
+    public static boolean failed=false;
 
-    /**
-     * Main setup method for the calculator
-     *
-     * @param unsortedString splits the string internal into an String[]
-     *                       then filters it:
-     *                       If(String=!operator){
-     *                       tries to convert string to double,
-     *                       puts the double into an internal Stack<Double> prePushToDestinationStack
-     *                       }else{
-     *                       puts the String into a Stringbuffer,which gets converted to a String and
-     *                       the splitted string becomes an array
-     *                       }
-     *                       <p>
-     *                       prePushToDestinationStack will be read out
-     *                       and put upside down into the stack of the main class (static inputValuesForCalculation = new Stack<>();)
-     *                       <p>
-     *                       the array which is made out of the stringBuffer
-     *                       will be set as the class attribute of the main class (static String[] calculationOperators;)
-     */
 
-    static void stringFilterOperatorsIntoArrayAndEverythingElseIntoStack(String unsortedString) {
-        String[] unsortedStringSplitted = unsortedString.split(" ");
-        StringBuffer operatorsForCalculationBuffer = new StringBuffer("");
-        Stack<Double> prePushToDestinationStack = new Stack<>();
-        int unsortedStringSplittedLength = unsortedStringSplitted.length;
+    static public void sort(String[] unsortedStringSplit) {
+        while (reading) {
+            for (int i = currentIndex; i < unsortedStringSplit.length; i++) {
+                if (isOperator(unsortedStringSplit[i])) {
+                    SetupBot.preOperatorBuffer.append(unsortedStringSplit[i] + " ");
+                    for (int j = i + 1; j < unsortedStringSplit.length; j++) {
+                        if (!isOperator(unsortedStringSplit[j])) {
+                            reading = false;
+                            break;
+                        }
+                    }
+                    currentIndex++;
+                    if (i == unsortedStringSplit.length - 1) {
+                        reading = false;
+                    }
 
-        for (int i = 0; i < unsortedStringSplittedLength; i++) {
-            if (isOperator(unsortedStringSplitted[i])) {
-                operatorsForCalculationBuffer.append(unsortedStringSplitted[i] + " ");
-            } else {
-                //TODO programm needs  to learn to recon Literals / watch out : https://freedocs.mi.hdm-stuttgart.de/sd1_sect_projectRpnCalculatorFunctionality.html
-                try {
-                    prePushToDestinationStack.push(Double.parseDouble(unsortedStringSplitted[i]));
-                } catch (NumberFormatException e) {
-                    //TODO what to do in case of an exception? found a letter instead of a number
+                } else {
+
+                    try {
+                        prePushStack.push(Double.parseDouble(unsortedStringSplit[i]));
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("failed, false entry values");
+                    reading =false;
+                    failed=true;
+
+                    }
+                    currentIndex++;
+                    if (i == unsortedStringSplit.length - 1) {
+                        reading = false;
+                    }
                 }
+                if (!reading) {
+                    break;
+                }
+
+            }
+
+
+        }
+        if(!failed) {
+            App.operatorArray = SetupBot.preOperatorBuffer.toString().split(" ");
+            while (!prePushStack.empty()) {
+                App.calculationNumbersStack.push(SetupBot.prePushStack.pop());
+            }
+
+            SetupBot.solve(unsortedStringSplit);
+        }
+
+    }
+
+
+    //TODO error warning if there is still a binary operator left when the size of the stack<double> is at 1
+    public static void solve(String[] unsortedStringSplit) {
+        //int stackSizeControl=App.calculationNumbersStack.size();
+        for (int i = 0; i < App.operatorArray.length; i++) {
+            if (!App.calculationNumbersStack.empty()) {
+                activateBinaryOperator(App.operatorArray[i]);
+                activateUnaryOperator(App.operatorArray[i]);
+            } else {
+                System.out.println("invalid calculation input");
             }
         }
+        SetupBot.preOperatorBuffer = new StringBuffer("");
+        App.operatorArray = null;
+        reading = true;
 
-        while (!prePushToDestinationStack.empty()) {
-            App.inputValuesForCalculation.push(prePushToDestinationStack.pop());
+        if (SetupBot.currentIndex == unsortedStringSplit.length) {
+            // System.out.print(App.calculationNumbersStack.peek());
+            App.result = App.calculationNumbersStack.peek();
+
+            reading = false;
+        } else {
+            SetupBot.sort(unsortedStringSplit);
         }
-
-        String operatorsForCalculation = operatorsForCalculationBuffer.toString();
-        App.calculationOperators = operatorsForCalculation.split(" ");
-
 
     }
 
@@ -86,37 +121,6 @@ public class SetupBot {
 
 
         }
-    }
-
-    /**
-     * creating internal Integer stackSizeControl
-     * with the starting Size of the Stack App.inputValuesforCalculation
-     * <p>
-     * taking each operation out of the Array App.calculationOperators
-     * compares the string of the Array in a switch case and
-     * activates the MathOperation according to the Character that has been read out
-     * <p>
-     * each MathOperation shrinks down the size of the Stack depending on its
-     * mathematical context, furthermore when the size of the stack==1
-     * the last remaining object is peeked and given out as return value
-     * <p>
-     * programm will try to shrink the size with the operators
-     * if the stackSize is at one it'll only use unary operators
-     *
-     * @return App.inputValuesForCalculation.peek()
-     */
-    //TODO error warning if there is still a binary operator left when the size of the stack<double> is at 1
-    public static double solve() {
-        //int stackSizeControl=App.inputValuesForCalculation.size();
-        for (int i = 0; i < App.calculationOperators.length; i++) {
-            if (App.inputValuesForCalculation.size() > 1) {
-                activateBinaryOperator(App.calculationOperators[i]);
-                activateUnaryOperator(App.calculationOperators[i]);
-            } else {
-                activateUnaryOperator(App.calculationOperators[i]);
-            }
-        }
-        return App.inputValuesForCalculation.peek();
     }
 
     /**
@@ -183,62 +187,71 @@ public class SetupBot {
     //TODO JavaDoc and include method into the programm , only use this method if string includes special signs otherwise performance ist damaged
     //TODO use if before activating this method
     // method for tracking Literals such as binary hexa or 2E10
-    public static String convertLiterals(String undefinedNumber){
+    public static String convertLiterals(String undefinedNumber) {
 
-        StringBuffer preparedNumber= new StringBuffer("");
-        StringBuffer errorCalls=new StringBuffer("");
+        StringBuffer preparedNumber = new StringBuffer("");
+        StringBuffer errorCalls = new StringBuffer("");
 
-        double numberValue=0;
-        boolean positive=true;
-        double exponentialNumber=0;
+        double numberValue = 0;
+        boolean positive = true;
+        double exponentialNumber = 0;
         boolean positiveExponent = true;
 
         int exponentialLiteralIndex;
-        if(undefinedNumber.lastIndexOf('E')==-1){
-            exponentialLiteralIndex=undefinedNumber.length();
-        }else{
-            exponentialLiteralIndex=undefinedNumber.lastIndexOf('E');
+        if (undefinedNumber.lastIndexOf('E') == -1) {
+            exponentialLiteralIndex = undefinedNumber.length();
+        } else {
+            exponentialLiteralIndex = undefinedNumber.lastIndexOf('E');
         }
 
         int decimalLiteralIndex;
-            if (undefinedNumber.indexOf(',') >= 0) {
-                decimalLiteralIndex = undefinedNumber.indexOf(',');
-            } else if (undefinedNumber.indexOf('.') >= 0) {
-                decimalLiteralIndex = undefinedNumber.indexOf('.');
-            }else if (exponentialLiteralIndex==-1){
-                decimalLiteralIndex=undefinedNumber.length()-1;
-            }else{
-                decimalLiteralIndex=exponentialLiteralIndex;
-            }
+        if (undefinedNumber.indexOf(',') >= 0) {
+            decimalLiteralIndex = undefinedNumber.indexOf(',');
+        } else if (undefinedNumber.indexOf('.') >= 0) {
+            decimalLiteralIndex = undefinedNumber.indexOf('.');
+        } else if (exponentialLiteralIndex == -1) {
+            decimalLiteralIndex = undefinedNumber.length() - 1;
+        } else {
+            decimalLiteralIndex = exponentialLiteralIndex;
+        }
 //in case it is a Dezimal number
-        if(!(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='b')
-                &&!(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='x')
-                &&!(undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='b')
-                &&!(undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='x')) {
+        if (!(undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'b')
+                && !(undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'x')
+                && !(undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'b')
+                && !(undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'x')) {
 
             for (int i = 0; i < exponentialLiteralIndex; i++) {
-                int referencePoint = decimalLiteralIndex-1 ;
+                int referencePoint = decimalLiteralIndex - 1;
                 if (i > decimalLiteralIndex) {
                     referencePoint = decimalLiteralIndex;
                 }
                 switch (undefinedNumber.charAt(i)) {
-                    case '1':numberValue = numberValue + 1 * Math.pow(10, (referencePoint - i));
-                    break;
-                    case '2':numberValue = numberValue + 2 * Math.pow(10, (referencePoint - i));
+                    case '1':
+                        numberValue = numberValue + 1 * Math.pow(10, (referencePoint - i));
                         break;
-                    case '3':numberValue = numberValue + 3 * Math.pow(10, (referencePoint - i));
+                    case '2':
+                        numberValue = numberValue + 2 * Math.pow(10, (referencePoint - i));
                         break;
-                    case '4':numberValue = numberValue + 4 * Math.pow(10, (referencePoint - i));
+                    case '3':
+                        numberValue = numberValue + 3 * Math.pow(10, (referencePoint - i));
                         break;
-                    case '5':numberValue = numberValue + 5 * Math.pow(10, (referencePoint - i));
+                    case '4':
+                        numberValue = numberValue + 4 * Math.pow(10, (referencePoint - i));
                         break;
-                    case '6':numberValue = numberValue + 6 * Math.pow(10, (referencePoint - i));
+                    case '5':
+                        numberValue = numberValue + 5 * Math.pow(10, (referencePoint - i));
                         break;
-                    case '7':numberValue = numberValue + 7 * Math.pow(10, (referencePoint - i));
+                    case '6':
+                        numberValue = numberValue + 6 * Math.pow(10, (referencePoint - i));
                         break;
-                    case '8':numberValue = numberValue + 8 * Math.pow(10, (referencePoint - i));
+                    case '7':
+                        numberValue = numberValue + 7 * Math.pow(10, (referencePoint - i));
                         break;
-                    case '9':numberValue = numberValue + 9 * Math.pow(10, (referencePoint - i));
+                    case '8':
+                        numberValue = numberValue + 8 * Math.pow(10, (referencePoint - i));
+                        break;
+                    case '9':
+                        numberValue = numberValue + 9 * Math.pow(10, (referencePoint - i));
                         break;
                     case '0':
                         break;
@@ -246,164 +259,191 @@ public class SetupBot {
                         if (i == 0) {
                             positive = false;
                         } else {
-                            errorCalls.append("\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved " +
+                            errorCalls.append("#\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved " +
                                     "\n>>||only use '-' in front of a number||");
                         }
                         break;
                     case '.':
                         if (i != decimalLiteralIndex) {
-                            errorCalls.append("\nCharacter:'.' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal " +
+                            errorCalls.append("#\nCharacter:'.' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal " +
                                     "\n>>||each number can only have one decimal Literal||");
                         }
                         break;
                     case ',':
                         if (i != decimalLiteralIndex) {
-                            errorCalls.append("\nCharacter:',' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal" +
+                            errorCalls.append("#\nCharacter:',' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal" +
                                     "\n>>||each number can only have one decimal Literal||");
                         }
                         break;
                     case 'e':
                         if (i != 0 && i != 1) {
                             //TODO what is when "e" stands within of a word which is  wrong as a whole
-                            errorCalls.append("\nCharacter:'e' at Index " + i + " of " + undefinedNumber + " is a literal for the euler number" +
+                            errorCalls.append("#\nCharacter:'e' at Index " + i + " of " + undefinedNumber + " is a literal for the euler number" +
                                     "\n>>||the euler number is a Value itself and not a Part of a number||");
                         }
                         break;
                     default:
-                        errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
+                        errorCalls.append("#\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
                                 "\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -) for numbers or hexadecimal/binary numbers||");
                         break;
                 }
             }
 //case  if binary number
-        }else if(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='b'
-                ||undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='b'){
+        } else if (undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'b'
+                || undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'b') {
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
-            int referencePoint = decimalLiteralIndex-1 ;
-            for (int i = undefinedNumber.indexOf('0')+2; i < exponentialLiteralIndex; i++) {
+            int referencePoint = decimalLiteralIndex - 1;
+            for (int i = undefinedNumber.indexOf('0') + 2; i < exponentialLiteralIndex; i++) {
                 switch (undefinedNumber.charAt(i)) {
                     case '0':
                         break;
-                    case '1':numberValue=numberValue+Math.pow(2,referencePoint-i);
+                    case '1':
+                        numberValue = numberValue + Math.pow(2, referencePoint - i);
                         break;
                     case '-':
-                        errorCalls.append("\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved" +
-                                    "\n>>||only use '-' in front of a number||");
+                        errorCalls.append("#\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved" +
+                                "\n>>||only use '-' in front of a number||");
                         break;
                     default:
-                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) +" at Index " + i + " of " + undefinedNumber + " can not be resolved " +
+                        errorCalls.append("#\nCharacter: " + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " can not be resolved " +
                                 "\n>>||only use 0 or 1 within binary numbers||");
                         break;
                 }
             }
 //case if hexadezimal  number
-        }else if(undefinedNumber.charAt(0)=='0'&&undefinedNumber.charAt(1)=='x'
-                ||undefinedNumber.charAt(1)=='0'&&undefinedNumber.charAt(2)=='x'){
-                int lastIndexOfHexa=exponentialLiteralIndex-1;
+        } else if (undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'x'
+                || undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'x') {
+            int lastIndexOfHexa = exponentialLiteralIndex - 1;
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
-            if(exponentialLiteralIndex==undefinedNumber.length()-1){
-                lastIndexOfHexa=undefinedNumber.length()-1;
+            if (exponentialLiteralIndex == undefinedNumber.length() - 1) {
+                lastIndexOfHexa = undefinedNumber.length() - 1;
             }
 
-            for (int i = undefinedNumber.indexOf('0')+2; i <=lastIndexOfHexa; i++) {
+            for (int i = undefinedNumber.indexOf('0') + 2; i <= lastIndexOfHexa; i++) {
                 switch (undefinedNumber.charAt(i)) {
                     case '0':
                         break;
-                    case '1':numberValue=numberValue+1*Math.pow(16,lastIndexOfHexa-i);
+                    case '1':
+                        numberValue = numberValue + 1 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '2':numberValue=numberValue+2*Math.pow(16,lastIndexOfHexa-i);
+                    case '2':
+                        numberValue = numberValue + 2 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '3':numberValue=numberValue+3*Math.pow(16,lastIndexOfHexa-i);
+                    case '3':
+                        numberValue = numberValue + 3 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '4':numberValue=numberValue+4*Math.pow(16,lastIndexOfHexa-i);
+                    case '4':
+                        numberValue = numberValue + 4 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '5':numberValue=numberValue+5*Math.pow(16,lastIndexOfHexa-i);
+                    case '5':
+                        numberValue = numberValue + 5 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '6':numberValue=numberValue+6*Math.pow(16,lastIndexOfHexa-i);
+                    case '6':
+                        numberValue = numberValue + 6 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '7':numberValue=numberValue+7*Math.pow(16,lastIndexOfHexa-i);
+                    case '7':
+                        numberValue = numberValue + 7 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '8':numberValue=numberValue+8*Math.pow(16,lastIndexOfHexa-i);
+                    case '8':
+                        numberValue = numberValue + 8 * Math.pow(16, lastIndexOfHexa - i);
                         break;
-                    case '9':numberValue=numberValue+9*Math.pow(16,lastIndexOfHexa-i);
-                    break;
-                    case 'A':numberValue=numberValue+10*Math.pow(16,lastIndexOfHexa-i);
-                    break;
-                    case 'B':numberValue=numberValue+11*Math.pow(16,lastIndexOfHexa-i);
-                    break;
-                    case 'C':numberValue=numberValue+12*Math.pow(16,lastIndexOfHexa-i);
-                    break;
-                    case 'D':numberValue=numberValue+13*Math.pow(16,lastIndexOfHexa-i);
-                    break;
-                    case 'E':numberValue=numberValue+14*Math.pow(16,lastIndexOfHexa-i);
-                    break;
-                    case 'F':numberValue=numberValue+15*Math.pow(16,lastIndexOfHexa-i);
-                    break;
+                    case '9':
+                        numberValue = numberValue + 9 * Math.pow(16, lastIndexOfHexa - i);
+                        break;
+                    case 'A':
+                        numberValue = numberValue + 10 * Math.pow(16, lastIndexOfHexa - i);
+                        break;
+                    case 'B':
+                        numberValue = numberValue + 11 * Math.pow(16, lastIndexOfHexa - i);
+                        break;
+                    case 'C':
+                        numberValue = numberValue + 12 * Math.pow(16, lastIndexOfHexa - i);
+                        break;
+                    case 'D':
+                        numberValue = numberValue + 13 * Math.pow(16, lastIndexOfHexa - i);
+                        break;
+                    case 'E':
+                        numberValue = numberValue + 14 * Math.pow(16, lastIndexOfHexa - i);
+                        break;
+                    case 'F':
+                        numberValue = numberValue + 15 * Math.pow(16, lastIndexOfHexa - i);
+                        break;
                     default:
-                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) +" at Index " + i + " of " + undefinedNumber + " can not be resolved " +
+                        errorCalls.append("#\nCharacter: " + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " can not be resolved " +
                                 "\n>>||only use 0 - F within binary numbers||");
                         break;
                 }
             }
         }
 // caculating exponent if exists
-        if(exponentialLiteralIndex!=-1 && exponentialLiteralIndex!=undefinedNumber.length()-1 ) {
-            for (int i=exponentialLiteralIndex+1;i<undefinedNumber.length();i++){
-                switch(undefinedNumber.charAt(i)){
+        if (exponentialLiteralIndex != -1 && exponentialLiteralIndex != undefinedNumber.length() - 1) {
+            for (int i = exponentialLiteralIndex + 1; i < undefinedNumber.length(); i++) {
+                switch (undefinedNumber.charAt(i)) {
                     case '-':
-                        if(i==exponentialLiteralIndex+1) {
-                            positiveExponent=false;
-                        }else{
-                            errorCalls.append("\nCharacter:'-' at Index "+ i +" of " + undefinedNumber + " can not be resolved" +
+                        if (i == exponentialLiteralIndex + 1) {
+                            positiveExponent = false;
+                        } else {
+                            errorCalls.append("#\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved" +
                                     "\n>>||only use '-' in front of a number||");
                         }
-                    break;
-                    case '1': exponentialNumber=exponentialNumber+1*Math.pow(10,(undefinedNumber.length()-1-i));
                         break;
-                    case '2': exponentialNumber=exponentialNumber+2*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '1':
+                        exponentialNumber = exponentialNumber + 1 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
-                    case '3': exponentialNumber=exponentialNumber+3*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '2':
+                        exponentialNumber = exponentialNumber + 2 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
-                    case '4': exponentialNumber=exponentialNumber+4*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '3':
+                        exponentialNumber = exponentialNumber + 3 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
-                    case '5': exponentialNumber=exponentialNumber+5*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '4':
+                        exponentialNumber = exponentialNumber + 4 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
-                    case '6': exponentialNumber=exponentialNumber+6*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '5':
+                        exponentialNumber = exponentialNumber + 5 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
-                    case '7': exponentialNumber=exponentialNumber+7*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '6':
+                        exponentialNumber = exponentialNumber + 6 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
-                    case '8': exponentialNumber=exponentialNumber+8*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '7':
+                        exponentialNumber = exponentialNumber + 7 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
-                    case '9': exponentialNumber=exponentialNumber+9*Math.pow(10,(undefinedNumber.length()-1-i));
+                    case '8':
+                        exponentialNumber = exponentialNumber + 8 * Math.pow(10, (undefinedNumber.length() - 1 - i));
+                        break;
+                    case '9':
+                        exponentialNumber = exponentialNumber + 9 * Math.pow(10, (undefinedNumber.length() - 1 - i));
                         break;
                     case '0':
                         break;
                     default:
-                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) + " of " + undefinedNumber + " can not be resolved" +
+                        errorCalls.append("#\nCharacter: " + undefinedNumber.charAt(i) + " of " + undefinedNumber + " can not be resolved" +
                                 "\n>>||please,only use natural numbers as exponent||");
                         break;
                 }
             }
         }
-        if(positiveExponent && positive) {
+        if (positiveExponent && positive) {
             preparedNumber.append(numberValue * Math.pow(10, exponentialNumber));
         }
-        if(!positiveExponent && positive) {
-            preparedNumber.append( numberValue * Math.pow(10,(-1)* exponentialNumber));
+        if (!positiveExponent && positive) {
+            preparedNumber.append(numberValue * Math.pow(10, (-1) * exponentialNumber));
         }
-        if(positiveExponent && !positive) {
-            preparedNumber.append((-1)*numberValue * Math.pow(10,exponentialNumber));
+        if (positiveExponent && !positive) {
+            preparedNumber.append((-1) * numberValue * Math.pow(10, exponentialNumber));
         }
-        if(!positiveExponent && !positive) {
-            preparedNumber.append((-1)* numberValue * Math.pow(10,(-1)* exponentialNumber));
+        if (!positiveExponent && !positive) {
+            preparedNumber.append((-1) * numberValue * Math.pow(10, (-1) * exponentialNumber));
         }
 
         preparedNumber.append(errorCalls);
 
         return preparedNumber.toString();
     }
+
+
 }
