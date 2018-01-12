@@ -47,7 +47,7 @@ public class App {
 */
         //TODO play with me mates :) put in binary hexa or decimal numbers with . ,  E e 0b 0x into undefinedNumber to test it out please :o
         // TODO die neues methode des Programms wird hier kurz getestet
-        if (!SetupBot.failed) {
+      /*  if (!SetupBot.failed) {
             try {
                 System.out.println(Double.parseDouble(SetupBot.convertLiterals("0x1-")));
                 // System.out.println(Double.parseDouble("0x1"));
@@ -62,5 +62,6 @@ public class App {
                 System.out.println("\n________________________________________");
             }
         }
+            */
     }
 }

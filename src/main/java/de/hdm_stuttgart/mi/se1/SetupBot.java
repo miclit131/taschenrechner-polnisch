@@ -1,5 +1,6 @@
 package de.hdm_stuttgart.mi.se1;
 
+import java.util.Set;
 import java.util.Stack;
 
 public class SetupBot {
@@ -29,10 +30,18 @@ public class SetupBot {
                 } else {
 
                     try {
-                        prePushStack.push(Double.parseDouble(unsortedStringSplit[i]));
+                        //prePushStack.push(Double.parseDouble(unsortedStringSplit[i]));
+                        prePushStack.push(Double.parseDouble(SetupBot.convertLiterals(unsortedStringSplit[i])));
 
                     } catch (NumberFormatException e) {
-                        System.out.println("failed, false entry values");
+                      //  System.out.println("failed, false entry values");
+                        String[] a = SetupBot.convertLiterals(unsortedStringSplit[i]).split("#");
+                        System.out.println("\n________________________________________");
+                        System.out.println("parsing of " + a[0] + " has failed ");
+                        for (int d = 1; d < a.length; d++) {
+                            System.out.print(a[d]);
+                        }
+                        System.out.println("\n________________________________________");
                     reading =false;
                     failed=true;
 
@@ -214,11 +223,12 @@ public class SetupBot {
         } else {
             decimalLiteralIndex = exponentialLiteralIndex;
         }
+
 //in case it is a Dezimal number
-        if (!(undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'b')
-                && !(undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'x')
-                && !(undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'b')
-                && !(undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'x')) {
+        if (!(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'b',undefinedNumber))
+                && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber))
+                && !(checkIndex(1,'0',undefinedNumber)&& checkIndex(2,'b',undefinedNumber))
+                && !(checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber))) {
 
             for (int i = 0; i < exponentialLiteralIndex; i++) {
                 int referencePoint = decimalLiteralIndex - 1;
@@ -289,8 +299,8 @@ public class SetupBot {
                 }
             }
 //case  if binary number
-        } else if (undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'b'
-                || undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'b') {
+        } else if (checkIndex(0,'0',undefinedNumber) && checkIndex(1,'b',undefinedNumber)
+                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'b',undefinedNumber)) {
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
@@ -312,9 +322,10 @@ public class SetupBot {
                         break;
                 }
             }
+            //undefinedNumber.charAt(1) == 'x'
 //case if hexadezimal  number
-        } else if (undefinedNumber.charAt(0) == '0' && undefinedNumber.charAt(1) == 'x'
-                || undefinedNumber.charAt(1) == '0' && undefinedNumber.charAt(2) == 'x') {
+        } else if (checkIndex(1,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber)
+                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber)) {
             int lastIndexOfHexa = exponentialLiteralIndex - 1;
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
@@ -444,6 +455,16 @@ public class SetupBot {
 
         return preparedNumber.toString();
     }
-
-
+   static boolean checkIndex (int index, char character,String undefinedNumber){
+        try{char unclarifiedCharacter=undefinedNumber.charAt(index);
+            if(unclarifiedCharacter==character){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(IndexOutOfBoundsException e){
+            return false;
+        }
+    }
 }
+
