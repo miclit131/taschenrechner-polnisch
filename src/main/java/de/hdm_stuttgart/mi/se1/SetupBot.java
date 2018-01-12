@@ -10,6 +10,11 @@ public class SetupBot {
     private static boolean reading = true;
     public static boolean failed=false;
 
+    public static double testHelper(String testString){
+        String[] testArray=testString.split(" ");
+        SetupBot.sort(testArray);
+        return App.result;
+    }
 
     static public void sort(String[] unsortedStringSplit) {
         while (reading) {
@@ -67,7 +72,7 @@ public class SetupBot {
 
             SetupBot.solve(unsortedStringSplit);
         }
-
+        //SetupBot.testHelper("2 2 +");
     }
 
 
@@ -224,7 +229,7 @@ public class SetupBot {
             decimalLiteralIndex = exponentialLiteralIndex;
         }
 
-//in case it is a Dezimal number
+//in case it is a decimal number
         if (!(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'b',undefinedNumber))
                 && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber))
                 && !(checkIndex(1,'0',undefinedNumber)&& checkIndex(2,'b',undefinedNumber))
