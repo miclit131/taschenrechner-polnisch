@@ -10,11 +10,6 @@ public class SetupBot {
     private static boolean reading = true;
     public static boolean failed=false;
 
-    public static double testHelper(String testString){
-        String[] testArray=testString.split(" ");
-        SetupBot.sort(testArray);
-        return App.result;
-    }
 
     static public void sort(String[] unsortedStringSplit) {
         while (reading) {
@@ -72,7 +67,6 @@ public class SetupBot {
 
             SetupBot.solve(unsortedStringSplit);
         }
-        //SetupBot.testHelper("2 2 +");
     }
 
 

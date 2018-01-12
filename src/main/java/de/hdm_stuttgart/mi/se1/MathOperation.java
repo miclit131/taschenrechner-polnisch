@@ -97,7 +97,7 @@ public class MathOperation {
      * and puts the answer back on top of the same stack<Double>
      */
     public static void tangent() {
-        double answer = Math.cos(App.calculationNumbersStack.pop());
+        double answer = Math.tan(App.calculationNumbersStack.pop());
         App.calculationNumbersStack.push(answer);
     }
 
