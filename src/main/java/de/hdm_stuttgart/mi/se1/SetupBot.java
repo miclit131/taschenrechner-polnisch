@@ -324,7 +324,7 @@ public class SetupBot {
             }
             //undefinedNumber.charAt(1) == 'x'
 //case if hexadezimal  number
-        } else if (checkIndex(1,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber)
+        } else if (checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber)
                 || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber)) {
             int lastIndexOfHexa = exponentialLiteralIndex - 1;
             if (undefinedNumber.charAt(0) == '-') {
