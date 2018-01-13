@@ -31,7 +31,7 @@ public class SetupBot {
 
                     try {
                         //prePushStack.push(Double.parseDouble(unsortedStringSplit[i]));
-                        prePushStack.push(Double.parseDouble(SetupBot.convertLiterals(unsortedStringSplit[i])));
+                        App.calculationNumbersStack.push(Double.parseDouble(SetupBot.convertLiterals(unsortedStringSplit[i])));
 
                     } catch (NumberFormatException e) {
                       //  System.out.println("failed, false entry values");
@@ -61,10 +61,11 @@ public class SetupBot {
         }
         if(!failed) {
             App.operatorArray = SetupBot.preOperatorBuffer.toString().split(" ");
+           /*
             while (!prePushStack.empty()) {
                 App.calculationNumbersStack.push(SetupBot.prePushStack.pop());
             }
-
+*/
             SetupBot.solve(unsortedStringSplit);
         }
     }
@@ -178,6 +179,7 @@ public class SetupBot {
                 break;
             case "tan":
                 MathOperation.tangent();
+                break;
             case "exp":
                 MathOperation.exponential();
                 break;
