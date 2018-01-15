@@ -3,7 +3,7 @@ package de.hdm_stuttgart.mi.se1;
 public class SetupBot {
     private static StringBuffer preOperatorBuffer = new StringBuffer("");
     public static int currentIndex = 0;
-    private static boolean reading = true;
+    public static boolean reading = true;
     public static boolean failed=false;
 
 
@@ -75,7 +75,12 @@ public class SetupBot {
                 activateBinaryOperator(App.operatorArray[i]);
                 activateUnaryOperator(App.operatorArray[i]);
             } else {
-                System.out.println("invalid calculation input");
+                System.out.println("___________________________________________________________");
+                System.out.println("ERROR: invalid calculation input" +
+                                "\n >>||please do not use more operators then u have numbers.");
+                System.out.println("___________________________________________________________");
+                SetupBot.failed=true;
+                SetupBot.reading=false;
             }
         }
         SetupBot.preOperatorBuffer = new StringBuffer("");
@@ -224,7 +229,11 @@ public class SetupBot {
         if (!(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'b',undefinedNumber))
                 && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber))
                 && !(checkIndex(1,'0',undefinedNumber)&& checkIndex(2,'b',undefinedNumber))
-                && !(checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber))) {
+                && !(checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber))
+                && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'B',undefinedNumber))
+                && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'X',undefinedNumber))
+                && !(checkIndex(1,'0',undefinedNumber)&& checkIndex(2,'B',undefinedNumber))
+                && !(checkIndex(1,'0',undefinedNumber) && checkIndex(2,'X',undefinedNumber))) {
 
             for (int i = 0; i < exponentialLiteralIndex; i++) {
                 int referencePoint = decimalLiteralIndex - 1;
@@ -298,7 +307,9 @@ public class SetupBot {
             }
 //case  if binary number
         } else if (checkIndex(0,'0',undefinedNumber) && checkIndex(1,'b',undefinedNumber)
-                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'b',undefinedNumber)) {
+                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'b',undefinedNumber)
+                ||checkIndex(0,'0',undefinedNumber) && checkIndex(1,'B',undefinedNumber)
+                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'B',undefinedNumber)) {
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
@@ -323,7 +334,9 @@ public class SetupBot {
             //undefinedNumber.charAt(1) == 'x'
 //case if hexadezimal  number
         } else if (checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber)
-                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber)) {
+                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber)
+                ||checkIndex(0,'0',undefinedNumber) && checkIndex(1,'X',undefinedNumber)
+                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'X',undefinedNumber)) {
             int lastIndexOfHexa = exponentialLiteralIndex - 1;
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
@@ -364,21 +377,27 @@ public class SetupBot {
                         numberValue = numberValue + 9 * Math.pow(16, lastIndexOfHexa - i);
                         break;
                     case 'A':
+                    case 'a':
                         numberValue = numberValue + 10 * Math.pow(16, lastIndexOfHexa - i);
                         break;
                     case 'B':
+                    case 'b':
                         numberValue = numberValue + 11 * Math.pow(16, lastIndexOfHexa - i);
                         break;
                     case 'C':
+                    case 'c':
                         numberValue = numberValue + 12 * Math.pow(16, lastIndexOfHexa - i);
                         break;
                     case 'D':
+                    case 'd':
                         numberValue = numberValue + 13 * Math.pow(16, lastIndexOfHexa - i);
                         break;
                     case 'E':
+                    case 'e':
                         numberValue = numberValue + 14 * Math.pow(16, lastIndexOfHexa - i);
                         break;
                     case 'F':
+                    case 'f':
                         numberValue = numberValue + 15 * Math.pow(16, lastIndexOfHexa - i);
                         break;
                     default:

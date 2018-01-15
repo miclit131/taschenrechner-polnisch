@@ -22,11 +22,17 @@ public class App {
 //          .nextLine() takes the whole scannerInput
 //          .next() only takes next string / no sentences
         final Scanner InputStringScanner = new Scanner(System.in);
-
+        System.out.println("Welcome to the best RPN calculator in the whoooole world!!! \uD83C\uDF0D \uD83C\uDF38");
+        System.out.println("Have fun playing with numbers you little nerd \uD83C\uDFAE");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         while(runProgramm) {
-            System.out.println("Please enter your entry Values to calculate with or enter \" # \" to stop the Programm");
+            System.out.println("Do you wanna continue calculating? Or are you tired of maths? \nENTER your entry values to calculate with or ENTER \" stahp! \" to stahp the program");
+            System.out.print("ENTRY : ");
             String InputString = InputStringScanner.nextLine();
-            if(InputString.equals("#")){
+            if(InputString.equals("stahp!")){
+                System.out.println("Thank you very much for using our wonderful program ✨✨✨");
+                System.out.println("Please enter your credit card number here: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _" +
+                        "\n \uD83D\uDCB0 \uD83D\uDCB8 \uD83D\uDCB0 \uD83D\uDCB8 \uD83D\uDCB0 \uD83D\uDCB8 \uD83D\uDCB0 \uD83D\uDCB8");
                 runProgramm=false;
                 break;
             }
@@ -36,8 +42,20 @@ public class App {
             SetupBot.sort(InputStringArray);
 
             if (!SetupBot.failed) {
-                System.out.println(result);
+                if(calculationNumbersStack.size()==1){
+                System.out.println("RESULT: "+result+ "\n");
+
+                }else{
+                    System.out.println("___________________________________________________________");
+                    System.out.println("ERROR: too many numbers in the result stack " +
+                            "\n>>|| either add more operators or decrease the number of values initiated.||");
+                    System.out.println("___________________________________________________________");
+                }
             }
+            SetupBot.currentIndex=0;
+            SetupBot.failed=false;
+            SetupBot.reading=true;
+            App.calculationNumbersStack=new Stack<>();
         }
         //TODO unprofessional unity test, still need to implement
         //TODO unity tests for sort and isOperator methods in SetupCalculator class
