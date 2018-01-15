@@ -1,5 +1,7 @@
 package de.hdm_stuttgart.mi.se1;
 
+
+
 public class MathOperation {
     //TODO implement math operations that know how many objects they need
     //TODO operations should take numbers out of the stack,  calculate and put the answere back into the stack
@@ -12,8 +14,15 @@ public class MathOperation {
      * and puts the answer back on top of the  same stack<Double>
      */
     public static void add() {
-        double answer = App.calculationNumbersStack.pop() + App.calculationNumbersStack.pop();
-        App.calculationNumbersStack.push(answer);
+        if(App.calculationNumbersStack.size()>=2) {
+            double answer = App.calculationNumbersStack.pop() + App.calculationNumbersStack.pop();
+            App.calculationNumbersStack.push(answer);
+        }else{
+            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
+                    "\n binary operators always need 2 input values||");
+            SetupBot.failed=true;
+        }
     }
 
     /**
@@ -22,10 +31,17 @@ public class MathOperation {
      * and puts the answer back on top of the  same stack<Double>
      */
     public static void subtract() {
-        double a = App.calculationNumbersStack.pop();
-        double b = App.calculationNumbersStack.pop();
-        double answer = b-a;
-        App.calculationNumbersStack.push(answer);
+        if(App.calculationNumbersStack.size()>=2) {
+            double a = App.calculationNumbersStack.pop();
+            double b = App.calculationNumbersStack.pop();
+            double answer = b - a;
+            App.calculationNumbersStack.push(answer);
+        }else{
+            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
+                    "\n binary operators always need 2 input values||");
+            SetupBot.failed=true;
+        }
     }
 
     /**
@@ -35,10 +51,17 @@ public class MathOperation {
      */
     //TODO what happens if the second number is zero?
     public static void divide() {
-        double a = App.calculationNumbersStack.pop();
-        double b = App.calculationNumbersStack.pop();
-        double answer = b/a;
-        App.calculationNumbersStack.push(answer);
+        if(App.calculationNumbersStack.size()>=2) {
+            double a = App.calculationNumbersStack.pop();
+            double b = App.calculationNumbersStack.pop();
+            double answer = b / a;
+            App.calculationNumbersStack.push(answer);
+        }else{
+            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
+                    "\n binary operators always need 2 input values||");
+            SetupBot.failed=true;
+        }
     }
 
     /**
@@ -47,8 +70,15 @@ public class MathOperation {
      * and puts the answer back on top of the  same stack<Double>
      */
     public static void mulitply() {
-        double answer = App.calculationNumbersStack.pop() * App.calculationNumbersStack.pop();
-        App.calculationNumbersStack.push(answer);
+        if(App.calculationNumbersStack.size()>=2) {
+            double answer = App.calculationNumbersStack.pop() * App.calculationNumbersStack.pop();
+            App.calculationNumbersStack.push(answer);
+        }else{
+            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
+                    "\n binary operators always need 2 input values||");
+            SetupBot.failed=true;
+        }
     }
 
     /**
@@ -57,10 +87,17 @@ public class MathOperation {
      * and puts the answer back on top of the  same stack<Double>
      */
     public static void pow() {
-        double a = App.calculationNumbersStack.pop();
-        double b = App.calculationNumbersStack.pop();
-        double answer = Math.pow(b, a);
-        App.calculationNumbersStack.push(answer);
+        if(App.calculationNumbersStack.size()>=2) {
+            double a = App.calculationNumbersStack.pop();
+            double b = App.calculationNumbersStack.pop();
+            double answer = Math.pow(b, a);
+            App.calculationNumbersStack.push(answer);
+        }else{
+            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
+                    "\n binary operators always need 2 input values||");
+            SetupBot.failed=true;
+        }
     }
 
     //TODO Implementation of unarySubtraction

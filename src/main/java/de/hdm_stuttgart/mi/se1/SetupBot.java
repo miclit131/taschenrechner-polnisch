@@ -1,12 +1,8 @@
 package de.hdm_stuttgart.mi.se1;
 
-import java.util.Set;
-import java.util.Stack;
-
 public class SetupBot {
     private static StringBuffer preOperatorBuffer = new StringBuffer("");
-    private static Stack<Double> prePushStack = new Stack<>();
-    private static int currentIndex = 0;
+    public static int currentIndex = 0;
     private static boolean reading = true;
     public static boolean failed=false;
 
@@ -35,11 +31,11 @@ public class SetupBot {
 
                     } catch (NumberFormatException e) {
                       //  System.out.println("failed, false entry values");
-                        String[] a = SetupBot.convertLiterals(unsortedStringSplit[i]).split("#");
+                        String[] preparedNumberErrorCallsArray = SetupBot.convertLiterals(unsortedStringSplit[i]).split("#");
                         System.out.println("\n________________________________________");
-                        System.out.println("parsing of " + a[0] + " has failed ");
-                        for (int d = 1; d < a.length; d++) {
-                            System.out.print(a[d]);
+                        System.out.println("parsing of " + unsortedStringSplit[i] + " has failed ");
+                        for (int d = 1; d < preparedNumberErrorCallsArray.length; d++) {
+                            System.out.print(preparedNumberErrorCallsArray[d]);
                         }
                         System.out.println("\n________________________________________");
                     reading =false;
@@ -71,8 +67,8 @@ public class SetupBot {
     }
 
 
-    //TODO error warning if there is still a binary operator left when the size of the stack<double> is at 1
-    public static void solve(String[] unsortedStringSplit) {
+
+    private static void solve(String[] unsortedStringSplit) {
         //int stackSizeControl=App.calculationNumbersStack.size();
         for (int i = 0; i < App.operatorArray.length; i++) {
             if (!App.calculationNumbersStack.empty()) {
@@ -86,15 +82,14 @@ public class SetupBot {
         App.operatorArray = null;
         reading = true;
 
-        if (SetupBot.currentIndex == unsortedStringSplit.length) {
-            // System.out.print(App.calculationNumbersStack.peek());
+        if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size()!=0) {
             App.result = App.calculationNumbersStack.peek();
-
             reading = false;
-        } else {
+        } else if (SetupBot.currentIndex != unsortedStringSplit.length) {
             SetupBot.sort(unsortedStringSplit);
+        }else if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size()==0){
+            System.out.println("system reached a limit and stopped");
         }
-
     }
 
     /**
@@ -196,11 +191,11 @@ public class SetupBot {
 
     //TODO JavaDoc and include method into the programm , only use this method if string includes special signs otherwise performance ist damaged
     //TODO use if before activating this method
-    // method for tracking Literals such as binary hexa or 2E10
-    public static String convertLiterals(String undefinedNumber) {
+    // method for tracking Literals such as binary hexa or 2E10 -> JavaDOc
+    private static String convertLiterals(String undefinedNumber) {
 
-        StringBuffer preparedNumber = new StringBuffer("");
-        StringBuffer errorCalls = new StringBuffer("");
+        StringBuilder preparedNumber = new StringBuilder("");
+        StringBuilder errorCalls = new StringBuilder("");
 
         double numberValue = 0;
         boolean positive = true;
@@ -287,10 +282,12 @@ public class SetupBot {
                         }
                         break;
                     case 'e':
-                        if (i != 0 && i != 1) {
+                        if (i==0 && exponentialLiteralIndex==1 ||i==1 && numberValue==0 && i==exponentialLiteralIndex-1 ) {
+                            numberValue=numberValue+Math.E;
+                        }else if(numberValue==0){
                             //TODO what is when "e" stands within of a word which is  wrong as a whole
                             errorCalls.append("#\nCharacter:'e' at Index " + i + " of " + undefinedNumber + " is a literal for the euler number" +
-                                    "\n>>||the euler number is a Value itself and not a Part of a number||");
+                                    "\n>>||the euler number is a Value itself and can not be a Part of a number||");
                         }
                         break;
                     default:
@@ -456,13 +453,9 @@ public class SetupBot {
 
         return preparedNumber.toString();
     }
-   static boolean checkIndex (int index, char character,String undefinedNumber){
+   static private boolean checkIndex (int index, char character,String undefinedNumber){
         try{char unclarifiedCharacter=undefinedNumber.charAt(index);
-            if(unclarifiedCharacter==character){
-                return true;
-            }else{
-                return false;
-            }
+            return unclarifiedCharacter==character;
         }catch(IndexOutOfBoundsException e){
             return false;
         }

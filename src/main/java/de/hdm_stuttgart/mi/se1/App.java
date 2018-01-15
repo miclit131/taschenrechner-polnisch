@@ -12,24 +12,32 @@ import java.util.Stack;
 public class App {
     //private static Logger log = LogManager.getLogger(App.class);
 
-
+    public static boolean runProgramm = true;
     public static String[] operatorArray;
     public static Stack<Double> calculationNumbersStack = new Stack<>();
     public static double result;
-
+    public static String[] InputStringArray;
     public static void main(String[] args) {
 //          Scanner for the main source of the InputStream / Userinterface
 //          .nextLine() takes the whole scannerInput
 //          .next() only takes next string / no sentences
         final Scanner InputStringScanner = new Scanner(System.in);
-        System.out.println("Please enter your entry Values to calculate with");
-        String InputString = InputStringScanner.nextLine();
-        String[] InputStringArray = InputString.split(" ");
-        //setting the calculation up
-        SetupBot.sort(InputStringArray);
 
-        if (!SetupBot.failed) {
-            System.out.println(result);
+        while(runProgramm) {
+            System.out.println("Please enter your entry Values to calculate with or enter \" # \" to stop the Programm");
+            String InputString = InputStringScanner.nextLine();
+            if(InputString.equals("#")){
+                runProgramm=false;
+                break;
+            }
+
+            App.InputStringArray = InputString.split(" ");
+            //setting the calculation up
+            SetupBot.sort(InputStringArray);
+
+            if (!SetupBot.failed) {
+                System.out.println(result);
+            }
         }
         //TODO unprofessional unity test, still need to implement
         //TODO unity tests for sort and isOperator methods in SetupCalculator class
