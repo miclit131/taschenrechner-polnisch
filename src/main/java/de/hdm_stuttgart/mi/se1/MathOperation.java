@@ -18,10 +18,12 @@ public class MathOperation {
             double answer = App.calculationNumbersStack.pop() + App.calculationNumbersStack.pop();
             App.calculationNumbersStack.push(answer);
         }else{
+            System.out.println("___________________________________________________________");
             System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
                     "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
                     "\n binary operators always need 2 input values||");
             SetupBot.failed=true;
+            System.out.println("___________________________________________________________");
         }
     }
 
@@ -37,10 +39,12 @@ public class MathOperation {
             double answer = b - a;
             App.calculationNumbersStack.push(answer);
         }else{
+            System.out.println("___________________________________________________________");
             System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
                     "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
                     "\n binary operators always need 2 input values||");
             SetupBot.failed=true;
+            System.out.println("___________________________________________________________");
         }
     }
 
@@ -57,10 +61,12 @@ public class MathOperation {
             double answer = b / a;
             App.calculationNumbersStack.push(answer);
         }else{
+            System.out.println("___________________________________________________________");
             System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
                     "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
                     "\n binary operators always need 2 input values||");
             SetupBot.failed=true;
+            System.out.println("___________________________________________________________");
         }
     }
 
@@ -74,10 +80,12 @@ public class MathOperation {
             double answer = App.calculationNumbersStack.pop() * App.calculationNumbersStack.pop();
             App.calculationNumbersStack.push(answer);
         }else{
+            System.out.println("___________________________________________________________");
             System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
                     "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
                     "\n binary operators always need 2 input values||");
             SetupBot.failed=true;
+            System.out.println("___________________________________________________________");
         }
     }
 
@@ -93,10 +101,12 @@ public class MathOperation {
             double answer = Math.pow(b, a);
             App.calculationNumbersStack.push(answer);
         }else{
+            System.out.println("___________________________________________________________");
             System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
                     "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
                     "\n binary operators always need 2 input values||");
             SetupBot.failed=true;
+            System.out.println("___________________________________________________________");
         }
     }
 
