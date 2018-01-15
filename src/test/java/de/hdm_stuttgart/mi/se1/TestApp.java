@@ -43,7 +43,7 @@ public class TestApp {
     }
     @Test
     public void testSubstraction2(){
-        //assertEquals(4.0, testHelper("2 -2 -"), Math.pow(10,-14));
+        assertEquals(4.0, testHelper("2 -2 -"), Math.pow(10,-14));
     }
     @Test
     public void testSubstraction3(){
@@ -55,7 +55,7 @@ public class TestApp {
     }
     @Test
     public void testSubstraction5(){
-        //assertEquals(-3.0, testHelper("5 8 -"), Math.pow(10,-14));
+        assertEquals(-3.0, testHelper("5 8 -"), Math.pow(10,-14));
     }
 
     /**
@@ -79,12 +79,12 @@ public class TestApp {
     }
     @Test
     public void testDivision5(){
-        assertEquals(0.66666666666666666, testHelper("6 4 /"), Math.pow(10,-14));
+        assertEquals(1.5, testHelper("6 4 /"), Math.pow(10,-14));
     }
-    @Test
+    /*@Test
     public void testDivision6(){
-     //   assertEquals(-Infinity, testHelper("0 42 /"), Math.pow(10,-14)); //not testable
-    }
+        assertEquals(-Infinity, testHelper("0 42 /"), Math.pow(10,-14)); //not testable
+    }*/
 
     /**
      * Testing multiplication
@@ -119,15 +119,23 @@ public class TestApp {
     }
     @Test
     public void testPow2(){
-        //assertEquals(0.25, testHelper("2 -2 pow"), Math.pow(10,-14));
+        assertEquals(0.25, testHelper("2 -2 pow"), Math.pow(10,-14));
     }
     @Test
     public void testPow3(){
-        //assertEquals(4.0, testHelper("-2 2 pow"), Math.pow(10,-14));
+        assertEquals(4.0, testHelper("-2 2 pow"), Math.pow(10,-14));
     }
     @Test
     public void testPow4(){
         assertEquals(0.25, testHelper("-2 -2 pow"), Math.pow(10,-14));
+    }
+    @Test
+    public void testPow5(){
+        assertEquals(1.0, testHelper("2 0 pow"), Math.pow(10,-14));
+    }
+    @Test
+    public void testPow6(){
+        assertEquals(343.0, testHelper("7 3 pow"), Math.pow(10,-14));
     }
 
     /**
@@ -183,15 +191,15 @@ public class TestApp {
      */
     @Test
     public void testTangent1(){
-        //assertEquals(0, testHelper("0 tan"), Math.pow(10,-14));
+        assertEquals(0, testHelper("0 tan"), Math.pow(10,-14));
     }
     @Test
     public void testTangent2(){
-        //assertEquals(-2.185039863261519, testHelper("2 tan"), Math.pow(10,-14));
+        assertEquals(-2.185039863261519, testHelper("2 tan"), Math.pow(10,-14));
     }
     @Test
     public void testTangent3(){
-        //assertEquals(-1.5574077246549023, testHelper("-1 tan"), Math.pow(10,-14));
+        assertEquals(-1.5574077246549023, testHelper("-1 tan"), Math.pow(10,-14));
     }
 
     /**
@@ -247,7 +255,7 @@ public class TestApp {
     }
     @Test
     public void testComplex2(){
-        //assertEquals(5.0, testHelper("5 2 pow sqrt"), Math.pow(10,-14));
+        assertEquals(5.0, testHelper("5 2 pow sqrt"), Math.pow(10,-14));
     }
     @Test
     public void testComplex3(){
@@ -255,6 +263,6 @@ public class TestApp {
     }
     @Test
     public void testComplex4(){
-        assertEquals(0.0, testHelper(""), Math.pow(10,-14));
+        assertEquals(4.828313737302301, testHelper(" 3 5 ln *"), Math.pow(10,-14));
     }
 }
