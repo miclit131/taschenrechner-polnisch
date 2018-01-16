@@ -7,7 +7,7 @@ public class SetupBot {
     public static boolean failed=false;
 
 
-    static public void sort(String[] unsortedStringSplit) {
+    static public void sort(String[] unsortedStringSplit) throws JustOperatorsException, NumberFormatException,EmptyNumberStackException {
         while (reading) {
             for (int i = currentIndex; i < unsortedStringSplit.length; i++) {
                 if (isOperator(unsortedStringSplit[i])) {
@@ -29,7 +29,9 @@ public class SetupBot {
                         //prePushStack.push(Double.parseDouble(unsortedStringSplit[i]));
                         App.calculationNumbersStack.push(Double.parseDouble(SetupBot.convertLiterals(unsortedStringSplit[i])));
 
-                    } catch (NumberFormatException e) {
+                    }
+
+                    catch (NumberFormatException e) {
                       //  System.out.println("failed, false entry values");
                         String[] preparedNumberErrorCallsArray = SetupBot.convertLiterals(unsortedStringSplit[i]).split("#");
                         System.out.println("\n________________________________________");
@@ -42,6 +44,7 @@ public class SetupBot {
                     failed=true;
 
                     }
+
                     currentIndex++;
                     if (i == unsortedStringSplit.length - 1) {
                         reading = false;
@@ -50,37 +53,27 @@ public class SetupBot {
                 if (!reading) {
                     break;
                 }
-
             }
-
-
         }
         if(!failed) {
             App.operatorArray = SetupBot.preOperatorBuffer.toString().split(" ");
-           /*
-            while (!prePushStack.empty()) {
-                App.calculationNumbersStack.push(SetupBot.prePushStack.pop());
-            }
-*/
             SetupBot.solve(unsortedStringSplit);
         }
     }
 
 
 
-    private static void solve(String[] unsortedStringSplit) {
+    private static void solve(String[] unsortedStringSplit) throws JustOperatorsException,EmptyNumberStackException {
         //int stackSizeControl=App.calculationNumbersStack.size();
         for (int i = 0; i < App.operatorArray.length; i++) {
             if (!App.calculationNumbersStack.empty()) {
                 activateBinaryOperator(App.operatorArray[i]);
                 activateUnaryOperator(App.operatorArray[i]);
             } else {
-                System.out.println("___________________________________________________________");
-                System.out.println("ERROR: invalid calculation input" +
-                                "\n >>||please do not use more operators then u have numbers.");
-                System.out.println("___________________________________________________________");
-                SetupBot.failed=true;
-                SetupBot.reading=false;
+                throw new JustOperatorsException();
+                //TODO failed and reading needed ?
+                //SetupBot.failed=true;
+               // SetupBot.reading=false;
             }
         }
         SetupBot.preOperatorBuffer = new StringBuffer("");
@@ -93,10 +86,22 @@ public class SetupBot {
         } else if (SetupBot.currentIndex != unsortedStringSplit.length) {
             SetupBot.sort(unsortedStringSplit);
         }else if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size()==0){
-            System.out.println("system reached a limit and stopped");
+            throw new EmptyNumberStackException();
         }
     }
-
+public static void showResult() throws InputUnbalancedException,EmptyNumberStackException{
+    if (!SetupBot.failed) {
+        //TODO case needed size<=1
+        if(App.calculationNumbersStack.size()==1){
+            System.out.println("RESULT: "+App.result+ "\n");
+            //      System.out.println((char)27 + "[31m" + "ERROR MESSAGE IN RED"+(char)27 +"[0m");
+        }else if (App.calculationNumbersStack.size()>1){
+            throw new InputUnbalancedException();
+        }else{
+            throw new EmptyNumberStackException();
+        }
+    }
+}
     /**
      * Helping Method for the filter-process
      *

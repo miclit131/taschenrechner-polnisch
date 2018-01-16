@@ -39,24 +39,27 @@ public class App {
 
             App.InputStringArray = InputString.split(" ");
             //setting the calculation up
-            SetupBot.sort(InputStringArray);
-
-            if (!SetupBot.failed) {
-                if(calculationNumbersStack.size()==1){
-                System.out.println("RESULT: "+result+ "\n");
-
-                }else{
-                    System.out.println("___________________________________________________________");
-                    System.out.println("ERROR: too many numbers in the result stack " +
-                            "\n>>|| either add more operators or decrease the number of values initiated.||");
-                    System.out.println("___________________________________________________________");
-                }
+            try {
+                SetupBot.sort(InputStringArray);
+            }catch(JustOperatorsException | EmptyNumberStackException e){
+                System.out.println("___________________________________________________________");
+                System.out.println(e.getMessage());
+                System.out.println("___________________________________________________________");
             }
+try {
+    SetupBot.showResult();
+}catch(InputUnbalancedException | EmptyNumberStackException e){
+    System.out.println("___________________________________________________________");
+    System.out.println(e.getMessage());
+    System.out.println("___________________________________________________________");
+}
+
             SetupBot.currentIndex=0;
             SetupBot.failed=false;
             SetupBot.reading=true;
             App.calculationNumbersStack=new Stack<>();
         }
+        //TODO entering d ends up to be a format exception
         //TODO unprofessional unity test, still need to implement
         //TODO unity tests for sort and isOperator methods in SetupCalculator class
         /*

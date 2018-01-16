@@ -1,17 +1,34 @@
 package de.hdm_stuttgart.mi.se1;
 
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Test;
 import de.hdm_stuttgart.mi.se1.*;
+
+import java.util.Stack;
 
 /**
  * Unit tests
  */
 public class TestApp {
 
+    @After
+    public void resetAll(){
+        SetupBot.currentIndex=0;
+        SetupBot.failed=false;
+        SetupBot.reading=true;
+        App.calculationNumbersStack=new Stack<>();
+
+    }
     public static double testHelper(String testString){
         String[] testArray=testString.split(" ");
-        SetupBot.sort(testArray);
+        try{
+            SetupBot.sort(testArray);
+        } catch (Exception e){
+
+        }
+
         return App.result;
     }
     /**
