@@ -19,6 +19,7 @@ public class TestApp {
         SetupBot.failed=false;
         SetupBot.reading=true;
         App.calculationNumbersStack=new Stack<>();
+        SetupBot.preOperatorBuffer = new StringBuffer("");
 
     }
     public static double testHelper(String testString){

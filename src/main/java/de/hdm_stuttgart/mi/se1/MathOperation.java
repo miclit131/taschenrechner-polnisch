@@ -13,18 +13,15 @@ public class MathOperation {
      * the first number gets added to the second
      * and puts the answer back on top of the  same stack<Double>
      */
-    public static void add() {
+    public static void add() throws OperatorLimitException{
         if(App.calculationNumbersStack.size()>=2) {
             double answer = App.calculationNumbersStack.pop() + App.calculationNumbersStack.pop();
             App.calculationNumbersStack.push(answer);
         }else{
-            System.out.println("___________________________________________________________");
-            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
-                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
-                    "\n binary operators always need 2 input values||");
-            SetupBot.failed=true;
-            System.out.println("___________________________________________________________");
-        }
+            throw new OperatorLimitException("ERROR: system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\n>>||the binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number||" +
+                    "\n  ||binary operators always need 2 input values           ||");
+            }
     }
 
     /**
@@ -32,19 +29,16 @@ public class MathOperation {
      * the first number gets subtracted from the second number
      * and puts the answer back on top of the  same stack<Double>
      */
-    public static void subtract() {
+    public static void subtract() throws OperatorLimitException{
         if(App.calculationNumbersStack.size()>=2) {
             double a = App.calculationNumbersStack.pop();
             double b = App.calculationNumbersStack.pop();
             double answer = b - a;
             App.calculationNumbersStack.push(answer);
         }else{
-            System.out.println("___________________________________________________________");
-            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
-                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
-                    "\n binary operators always need 2 input values||");
-            SetupBot.failed=true;
-            System.out.println("___________________________________________________________");
+            throw new OperatorLimitException("ERROR: system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\n>>||the binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number||" +
+                    "\n  ||binary operators always need 2 input values           ||");
         }
     }
 
@@ -54,19 +48,16 @@ public class MathOperation {
      * and puts the answer back on top of the  same stack<Double>
      */
     //TODO what happens if the second number is zero?
-    public static void divide() {
+    public static void divide() throws OperatorLimitException {
         if(App.calculationNumbersStack.size()>=2) {
             double a = App.calculationNumbersStack.pop();
             double b = App.calculationNumbersStack.pop();
             double answer = b / a;
             App.calculationNumbersStack.push(answer);
         }else{
-            System.out.println("___________________________________________________________");
-            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
-                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
-                    "\n binary operators always need 2 input values||");
-            SetupBot.failed=true;
-            System.out.println("___________________________________________________________");
+            throw new OperatorLimitException("ERROR: system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\n>>||the binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number||" +
+                    "\n  ||binary operators always need 2 input values           ||");
         }
     }
 
@@ -75,17 +66,14 @@ public class MathOperation {
      * the first number gets multiplied with the second
      * and puts the answer back on top of the  same stack<Double>
      */
-    public static void mulitply() {
+    public static void mulitply() throws OperatorLimitException {
         if(App.calculationNumbersStack.size()>=2) {
             double answer = App.calculationNumbersStack.pop() * App.calculationNumbersStack.pop();
             App.calculationNumbersStack.push(answer);
         }else{
-            System.out.println("___________________________________________________________");
-            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
-                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
-                    "\n binary operators always need 2 input values||");
-            SetupBot.failed=true;
-            System.out.println("___________________________________________________________");
+            throw new OperatorLimitException("ERROR: system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\n>>||the binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number||" +
+                    "\n  ||binary operators always need 2 input values           ||");
         }
     }
 
@@ -94,19 +82,16 @@ public class MathOperation {
      * the result of raising the first number to the power of the second number
      * and puts the answer back on top of the  same stack<Double>
      */
-    public static void pow() {
+    public static void pow() throws OperatorLimitException {
         if(App.calculationNumbersStack.size()>=2) {
             double a = App.calculationNumbersStack.pop();
             double b = App.calculationNumbersStack.pop();
             double answer = Math.pow(b, a);
             App.calculationNumbersStack.push(answer);
         }else{
-            System.out.println("___________________________________________________________");
-            System.out.println(">>||system reached a limit and stopped at Index "+SetupBot.currentIndex +
-                    "\nthe binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number" +
-                    "\n binary operators always need 2 input values||");
-            SetupBot.failed=true;
-            System.out.println("___________________________________________________________");
+            throw new OperatorLimitException("ERROR: system reached a limit and stopped at Index "+SetupBot.currentIndex +
+                    "\n>>||the binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number||" +
+                    "\n  ||binary operators always need 2 input values           ||");
         }
     }
 
