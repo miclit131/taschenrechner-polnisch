@@ -2,9 +2,10 @@ package de.hdm_stuttgart.mi.se1;
 
 import static org.junit.Assert.*;
 
+import de.hdm_stuttgart.mi.se1.project.App;
+import de.hdm_stuttgart.mi.se1.project.SetupBot;
 import org.junit.After;
 import org.junit.Test;
-import de.hdm_stuttgart.mi.se1.*;
 
 import java.util.Stack;
 

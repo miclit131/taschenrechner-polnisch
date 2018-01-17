@@ -1,6 +1,7 @@
-package de.hdm_stuttgart.mi.se1;
+package de.hdm_stuttgart.mi.se1.project;
 
 
+import de.hdm_stuttgart.mi.se1.exceptions.OperatorLimitException;
 
 public class MathOperation {
     //TODO implement math operations that know how many objects they need
@@ -13,12 +14,12 @@ public class MathOperation {
      * the first number gets added to the second
      * and puts the answer back on top of the  same stack<Double>
      */
-    public static void add() throws OperatorLimitException{
+    public static void add() throws OperatorLimitException {
         if(App.calculationNumbersStack.size()>=2) {
             double answer = App.calculationNumbersStack.pop() + App.calculationNumbersStack.pop();
             App.calculationNumbersStack.push(answer);
         }else{
-            throw new OperatorLimitException("ERROR: system reached a limit and stopped at Index "+SetupBot.currentIndex +
+            throw new OperatorLimitException("ERROR: system reached a limit and stopped at Index "+ SetupBot.currentIndex +
                     "\n>>||the binary operator \"" + App.InputStringArray[SetupBot.currentIndex-1]+"\" can't be used on single number||" +
                     "\n  ||binary operators always need 2 input values           ||");
             }

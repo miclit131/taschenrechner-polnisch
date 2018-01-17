@@ -1,5 +1,5 @@
-package de.hdm_stuttgart.mi.se1;
-
+package de.hdm_stuttgart.mi.se1.project;
+import de.hdm_stuttgart.mi.se1.exceptions.ExceptionCluster;
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 

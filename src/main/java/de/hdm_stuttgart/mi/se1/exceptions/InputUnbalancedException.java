@@ -1,4 +1,4 @@
-package de.hdm_stuttgart.mi.se1;
+package de.hdm_stuttgart.mi.se1.exceptions;
 
 public class InputUnbalancedException extends ExceptionCluster {
     public InputUnbalancedException(){
@@ -6,7 +6,7 @@ public class InputUnbalancedException extends ExceptionCluster {
                 "\n>>|| either add more operators or decrease the number of values initiated.||");
     }
     @Override
-    protected String getErrorType(){
+    public String getErrorType(){
         return "InputUnbalancedException";
     }
 }

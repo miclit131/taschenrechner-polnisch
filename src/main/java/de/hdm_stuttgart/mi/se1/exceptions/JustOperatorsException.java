@@ -1,4 +1,4 @@
-package de.hdm_stuttgart.mi.se1;
+package de.hdm_stuttgart.mi.se1.exceptions;
 
 public class JustOperatorsException extends ExceptionCluster {
 
@@ -6,7 +6,7 @@ public class JustOperatorsException extends ExceptionCluster {
         super("ERROR: invalid calculation input\n >>||please do not use just operators, u need to have numbers.||");
     }
 @Override
-    protected String getErrorType(){
+    public String getErrorType(){
         return "JustOperatorsException";
 }
 }

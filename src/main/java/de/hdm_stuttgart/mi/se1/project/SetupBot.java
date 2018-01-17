@@ -1,4 +1,7 @@
-package de.hdm_stuttgart.mi.se1;
+package de.hdm_stuttgart.mi.se1.project;
+
+import de.hdm_stuttgart.mi.se1.exceptions.ExceptionCluster;
+import de.hdm_stuttgart.mi.se1.exceptions.*;
 
 public class SetupBot {
     public static StringBuffer preOperatorBuffer = new StringBuffer("");
@@ -332,74 +335,76 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
                         break;
                 }
             }
-            //undefinedNumber.charAt(1) == 'x'
+
 //case if hexadezimal  number
         } else if (checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber)
                 || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber)
                 ||checkIndex(0,'0',undefinedNumber) && checkIndex(1,'X',undefinedNumber)
                 || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'X',undefinedNumber)) {
-            int lastIndexOfHexa = exponentialLiteralIndex - 1;
+           // int lastIndexOfHexa = exponentialLiteralIndex - 1;
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
-            if (exponentialLiteralIndex == undefinedNumber.length() - 1) {
+          /*  if (exponentialLiteralIndex == undefinedNumber.length() - 1) {
                 lastIndexOfHexa = undefinedNumber.length() - 1;
-            }
+            }*/
+          //  lastIndexOfHexa=undefinedNumber.length()-1;
+            int referencePoint =undefinedNumber.length()-1;
 
-            for (int i = undefinedNumber.indexOf('0') + 2; i <= lastIndexOfHexa; i++) {
+            for (int i = undefinedNumber.indexOf('0') + 2; i <= referencePoint; i++) {
                 switch (undefinedNumber.charAt(i)) {
                     case '0':
                         break;
                     case '1':
-                        numberValue = numberValue + 1 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 1 * Math.pow(16, referencePoint - i);
                         break;
                     case '2':
-                        numberValue = numberValue + 2 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 2 * Math.pow(16, referencePoint - i);
                         break;
                     case '3':
-                        numberValue = numberValue + 3 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 3 * Math.pow(16, referencePoint - i);
                         break;
                     case '4':
-                        numberValue = numberValue + 4 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 4 * Math.pow(16, referencePoint - i);
                         break;
                     case '5':
-                        numberValue = numberValue + 5 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 5 * Math.pow(16, referencePoint - i);
                         break;
                     case '6':
-                        numberValue = numberValue + 6 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 6 * Math.pow(16, referencePoint - i);
                         break;
                     case '7':
-                        numberValue = numberValue + 7 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 7 * Math.pow(16, referencePoint - i);
                         break;
                     case '8':
-                        numberValue = numberValue + 8 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 8 * Math.pow(16, referencePoint - i);
                         break;
                     case '9':
-                        numberValue = numberValue + 9 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 9 * Math.pow(16, referencePoint - i);
                         break;
                     case 'A':
                     case 'a':
-                        numberValue = numberValue + 10 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 10 * Math.pow(16, referencePoint - i);
                         break;
                     case 'B':
                     case 'b':
-                        numberValue = numberValue + 11 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 11 * Math.pow(16, referencePoint - i);
                         break;
                     case 'C':
                     case 'c':
-                        numberValue = numberValue + 12 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 12 * Math.pow(16, referencePoint - i);
                         break;
                     case 'D':
                     case 'd':
-                        numberValue = numberValue + 13 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 13 * Math.pow(16, referencePoint - i);
                         break;
                     case 'E':
                     case 'e':
-                        numberValue = numberValue + 14 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 14 * Math.pow(16, referencePoint - i);
                         break;
                     case 'F':
                     case 'f':
-                        numberValue = numberValue + 15 * Math.pow(16, lastIndexOfHexa - i);
+                        numberValue = numberValue + 15 * Math.pow(16, referencePoint - i);
                         break;
                     default:
                         errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " can not be resolved " +

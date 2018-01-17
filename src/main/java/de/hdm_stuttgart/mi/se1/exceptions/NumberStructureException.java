@@ -1,12 +1,12 @@
-package de.hdm_stuttgart.mi.se1;
+package de.hdm_stuttgart.mi.se1.exceptions;
 
-public class NumberStructureException extends ExceptionCluster{
+public class NumberStructureException extends ExceptionCluster {
     public NumberStructureException(String ErrorCalls){
         super(ErrorCalls);
 
     }
   @Override
-protected String getErrorType(){
+public String getErrorType(){
         return "NumberStructureException";
 }
 }
