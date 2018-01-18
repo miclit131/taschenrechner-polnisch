@@ -8,11 +8,11 @@ import de.hdm_stuttgart.mi.se1.exceptions.OperatorLimitException;
  * binary operators: takes 2 top-most items of App.calculationNumbersStack
  *                   executes binary calculation
  *                   puts the answer on top of App.calculationNumbersStack
- * unary operators: takes top-most item of App.calculationNumbersStack
- *                  executes unary calculation
- *                  puts result on top of App.calculationNumbersStack<Double>
+ * unary operators:  takes top-most item of App.calculationNumbersStack
+ *                   executes unary calculation
+ *                   puts result on top of App.calculationNumbersStack<Double>
  */
-public class MathOperation {
+class MathOperation {
 
     /**
      * first number is added to second number

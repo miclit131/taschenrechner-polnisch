@@ -1,23 +1,38 @@
 package de.hdm_stuttgart.mi.se1.project;
 
-import de.hdm_stuttgart.mi.se1.exceptions.ExceptionCluster;
 import de.hdm_stuttgart.mi.se1.exceptions.*;
-
-import java.util.Arrays;
 
 public class SetupBot {
     public static StringBuffer preOperatorBuffer = new StringBuffer("");
+    /**
+     * currentIndex is used, by the methods sort and solve,
+     * to communicate until which index the input is evaluated
+     * and control if the sort / solve process is finished
+     */
     public static int currentIndex = 0;
     public static boolean reading = true;
     public static boolean failed = false;
 
-
+    /** the sort method analyzes the input Array until the first set of operators
+     * and sorts them into 2 data structures (operators to an array and number
+     * into a stack)
+     *
+     * numbers get converted from String to a double number value by convertLiterals method
+     *
+     * when the first part of the input is sorted the sort method activates solve,
+     * which calculates the current sorted part.
+     *
+     * @param unsortedStringSplit input which gets analyzed and calculated
+     * @throws ExceptionCluster super class of the personal exceptions,
+     * whenever a self-written exception gets thrown, it'll be passed to the main
+     *
+     */
     static public void sort(String[] unsortedStringSplit) throws ExceptionCluster {
         while (reading) {
 
             for (int i = currentIndex; i < unsortedStringSplit.length; i++) {
                 if (isOperator(unsortedStringSplit[i])) {
-                    SetupBot.preOperatorBuffer.append(unsortedStringSplit[i] + " ");
+                    SetupBot.preOperatorBuffer.append(unsortedStringSplit[i]).append(" ");
                     for (int j = i + 1; j < unsortedStringSplit.length; j++) {
                         if (!isOperator(unsortedStringSplit[j])) {
                             reading = false;
@@ -31,7 +46,7 @@ public class SetupBot {
 
                 } else {
 
-                    App.calculationNumbersStack.push(Double.parseDouble(SetupBot.convertLiterals(unsortedStringSplit[i])));
+                    App.calculationNumbersStack.push(SetupBot.convertLiterals(unsortedStringSplit[i]));
 
                     currentIndex++;
                     if (i == unsortedStringSplit.length - 1) {
@@ -49,7 +64,24 @@ public class SetupBot {
         }
     }
 
-
+    /**
+     * solve activates operators one after another or throws an exception.
+     * It is guaranteed that activateBinaryOperators and activateUnaryOperator only get operators as input.
+     * The last result will be still in the memory location for numbers.
+     * After the current part of the user-entry is calculated,solve puts sort into reading mode
+     * and tells sort thereby to analyze the next part of the user-entry or sets the final result
+     * that can be read out and finishes the sort-solve process.
+     *
+     *
+     * @param unsortedStringSplit the parameter is passed through sort to solve to allow solve
+     *                            to fulfil the constructor of sort. At the same time the parameter
+     *                            allows to get specific information about the Array in the process.
+     *                            solve is only used by the sort method.
+     * @throws ExceptionCluster solve passes through the OperatorLimitException in activateBinaryOperator
+     *                          by the binary operators in MathOperation.class.
+     *                          Solve itself throws JustOperatorException when there were no numbers
+     *                          in the currently analyzed part.
+     */
     private static void solve(String[] unsortedStringSplit) throws ExceptionCluster {
         for (int i = 0; i < App.operatorArray.length; i++) {
             if (!App.calculationNumbersStack.empty()) {
@@ -68,12 +100,13 @@ public class SetupBot {
             reading = false;
         } else if (SetupBot.currentIndex != unsortedStringSplit.length) {
             SetupBot.sort(unsortedStringSplit);
-        } else if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size() == 0) {
-            throw new EmptyEntryException();
         }
     }
 
     /**
+     * before showing the result the method checks if there was only 1 number in the memory location
+     * and throws exception if it was more double value that could ve been saved in the result.
+     *
      * @throws InputUnbalancedException there are too many numbers
      *                                  in the calculation stack before the result can be printed
      */
@@ -184,10 +217,9 @@ public class SetupBot {
         }
     }
 
-    //TODO JavaDoc and include method into the programm , only use this method if string includes special signs otherwise performance ist damaged
-    //TODO use if before activating this method
+
     // method for tracking Literals such as binary hexa or 2E10 -> JavaDOc
-    private static String convertLiterals(String undefinedNumber) throws ExceptionCluster {
+    private static double convertLiterals(String undefinedNumber) throws ExceptionCluster {
 
         StringBuilder preparedNumber = new StringBuilder("");
         StringBuilder errorCalls = new StringBuilder("");
@@ -264,20 +296,17 @@ public class SetupBot {
                         if (i == 0) {
                             positive = false;
                         } else {
-                            errorCalls.append("\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved " +
-                                    "\n>>||only use '-' in front of a number||");
+                            errorCalls.append("\nCharacter:'-' at Index ").append(i).append(" of ").append(undefinedNumber).append(" can not be resolved ").append("\n>>||only use '-' in front of a number||");
                         }
                         break;
                     case '.':
                         if (i != decimalLiteralIndex) {
-                            errorCalls.append("\nCharacter:'.' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal " +
-                                    "\n>>||each number can only have one decimal Literal||");
+                            errorCalls.append("\nCharacter:'.' at Index ").append(i).append(" of ").append(undefinedNumber).append(" is an Additional decimal Literal ").append("\n>>||each number can only have one decimal Literal||");
                         }
                         break;
                     case ',':
                         if (i != decimalLiteralIndex) {
-                            errorCalls.append("\nCharacter:',' at Index " + i + " of " + undefinedNumber + " is an Additional decimal Literal" +
-                                    "\n>>||each number can only have one decimal Literal||");
+                            errorCalls.append("\nCharacter:',' at Index ").append(i).append(" of ").append(undefinedNumber).append(" is an Additional decimal Literal").append("\n>>||each number can only have one decimal Literal||");
                         }
                         break;
                     case 'e':
@@ -296,9 +325,7 @@ public class SetupBot {
                     //TODO -pi and piE2 should be possible refer e Literal
                     case 'p':
                         if (!checkIfIndexIs((i + 1), 'i', undefinedNumber)) {
-                            errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
-                                    "\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||" +
-                                    "\n  ||for numbers or hexadecimal/binary numbers                              ||");
+                            errorCalls.append("\nCharacter:").append(undefinedNumber.charAt(i)).append(" at Index ").append(i).append(" of ").append(undefinedNumber).append(" is an unknown symbol ").append("\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||").append("\n  ||for numbers or hexadecimal/binary numbers                              ||");
                         } else if (i == 0 && exponentialLiteralIndex == 2 || i == 1 && numberValue == 0 && i + 1 == exponentialLiteralIndex - 1 && !(checkIfIndexIs(0, '0', undefinedNumber))) {
                             numberValue = numberValue + Math.PI;
                             i++;
@@ -308,9 +335,7 @@ public class SetupBot {
                         }
                         break;
                     default:
-                        errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
-                                "\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||" +
-                                "\n  ||for numbers or hexadecimal/binary numbers                              ||");
+                        errorCalls.append("\nCharacter:").append(undefinedNumber.charAt(i)).append(" at Index ").append(i).append(" of ").append(undefinedNumber).append(" is an unknown symbol ").append("\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||").append("\n  ||for numbers or hexadecimal/binary numbers                              ||");
                         break;
                 }
             }
@@ -331,12 +356,10 @@ public class SetupBot {
                         numberValue = numberValue + Math.pow(2, referencePoint - i);
                         break;
                     case '-':
-                        errorCalls.append("\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved" +
-                                "\n>>||only use '-' in front of a number||");
+                        errorCalls.append("\nCharacter:'-' at Index ").append(i).append(" of ").append(undefinedNumber).append(" can not be resolved").append("\n>>||only use '-' in front of a number||");
                         break;
                     default:
-                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " can not be resolved " +
-                                "\n>>||only use 0 or 1 within binary numbers||");
+                        errorCalls.append("\nCharacter: ").append(undefinedNumber.charAt(i)).append(" at Index ").append(i).append(" of ").append(undefinedNumber).append(" can not be resolved ").append("\n>>||only use 0 or 1 within binary numbers||");
                         break;
                 }
             }
@@ -412,8 +435,7 @@ public class SetupBot {
                         numberValue = numberValue + 15 * Math.pow(16, referencePoint - i);
                         break;
                     default:
-                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " can not be resolved " +
-                                "\n>>||only use 0 - F within binary numbers||");
+                        errorCalls.append("\nCharacter: ").append(undefinedNumber.charAt(i)).append(" at Index ").append(i).append(" of ").append(undefinedNumber).append(" can not be resolved ").append("\n>>||only use 0 - F within binary numbers||");
                         break;
                 }
             }
@@ -426,8 +448,7 @@ public class SetupBot {
                         if (i == exponentialLiteralIndex + 1) {
                             positiveExponent = false;
                         } else {
-                            errorCalls.append("\nCharacter:'-' at Index " + i + " of " + undefinedNumber + " can not be resolved" +
-                                    "\n>>||only use '-' in front of a number||");
+                            errorCalls.append("\nCharacter:'-' at Index ").append(i).append(" of ").append(undefinedNumber).append(" can not be resolved").append("\n>>||only use '-' in front of a number||");
                         }
                         break;
                     case '1':
@@ -460,8 +481,7 @@ public class SetupBot {
                     case '0':
                         break;
                     default:
-                        errorCalls.append("\nCharacter: " + undefinedNumber.charAt(i) + " of " + undefinedNumber + " can not be resolved" +
-                                "\n>>||please,only use natural numbers as exponent||");
+                        errorCalls.append("\nCharacter: ").append(undefinedNumber.charAt(i)).append(" of ").append(undefinedNumber).append(" can not be resolved").append("\n>>||please,only use natural numbers as exponent||");
                         break;
                 }
             }
@@ -483,10 +503,20 @@ public class SetupBot {
         if (errorCalls.length() != 0) {
             throw new NumberStructureException(errorCalls.toString());
         } else {
-            return preparedNumber.toString();
+            return Double.parseDouble(preparedNumber.toString());
         }
     }
 
+    /** helper method used to check two characters in sequence no matter if the second character index
+     * is outside of the String
+     *
+     * @param index the index that needs to be checked
+     * @param character the character that is looked for at the indec
+     * @param undefinedNumber String in which the character is looked for
+     * @return boolean which tells if at the character is found at a specific index
+     *         true when it is the character and false when it was not found or the index is
+     *         out of range of the given string
+     */
     static private boolean checkIfIndexIs(int index, char character, String undefinedNumber) {
         try {
             char unclarifiedCharacter = undefinedNumber.charAt(index);
@@ -502,7 +532,7 @@ public class SetupBot {
             StringBuilder secureInput = new StringBuilder("");
             for (String i : unsecureStringArray) {
                 if (!i.equals("")) {
-                    secureInput.append(i + " ");
+                    secureInput.append(i).append(" ");
                 }
             }
             alertQuit(secureInput.toString());

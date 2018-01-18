@@ -17,6 +17,7 @@ public class TestMathOperationMethods {
     /**
      * resetting all values after the test in order to execute the following tests
      */
+    @SuppressWarnings("Duplicates")
     @After
     public void resetAll() {
         SetupBot.currentIndex = 0;

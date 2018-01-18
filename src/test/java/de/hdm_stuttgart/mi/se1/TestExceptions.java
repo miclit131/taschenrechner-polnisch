@@ -18,8 +18,9 @@ import java.util.Stack;
 public class TestExceptions {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    final public ExpectedException thrown = ExpectedException.none();
 
+    @SuppressWarnings("Duplicates")
     @After
     public void resetAll() {
         SetupBot.currentIndex = 0;

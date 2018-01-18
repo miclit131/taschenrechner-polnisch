@@ -1,31 +1,36 @@
 package de.hdm_stuttgart.mi.se1.project;
 import de.hdm_stuttgart.mi.se1.exceptions.EmptyEntryException;
-import de.hdm_stuttgart.mi.se1.exceptions.EmptyEntryException;
 import de.hdm_stuttgart.mi.se1.exceptions.ExceptionCluster;
 import de.hdm_stuttgart.mi.se1.exceptions.FoundQuitException;
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 
-import java.util.EmptyStackException;
 import java.util.Scanner;
 import java.util.Stack;
 
 
-//TODO the programm can only work in one direction, (2+2)+((2*3)*5) is not possible. Also only works without literals at the moment
-//TODO programm makes no differences in + + 2 3 4 , 2 + 3 + 4, 2 3 + 4 + or 2 3 4 + + . Needs to be fixed so the TODO above  is possible to implement
+/**
+ * main class
+ * Program gets input values through a scanner
+ * which gets changed into a fitting data type
+ * and then given to a parse method which activates the  calculator.
+ * After the calculator has finish, the programm checks
+ * if there were any complication during the process
+ */
 public class App {
-    //private static Logger log = LogManager.getLogger(App.class);
 
-    private static boolean runProgramm = true;
-    public static String[] operatorArray;
     public static Stack<Double> calculationNumbersStack = new Stack<>();
-    public static double result;
+    private static boolean runProgramm = true;
     public static String[] InputStringArray;
+    public static String[] operatorArray;
+    public static double result;
+
+
     public static void main(String[] args) {
-//          Scanner for the main source of the InputStream / Userinterface
-//          .nextLine() takes the whole scannerInput
-//          .next() only takes next string / no sentences
+
+        //Scanner for the main source of the InputStream / Userinterface
         final Scanner InputStringScanner = new Scanner(System.in);
+
         //starting text first "frame" of the program
         System.out.println("Welcome to the best RPN calculator in the whoooole world!!! \uD83C\uDF0D \uD83C\uDF38"
                 +"\nHave fun playing with numbers little nerd \uD83C\uDFAE"
@@ -80,6 +85,7 @@ public class App {
                                     +(char)27 + "[31m"+e.getMessage()+(char)27 + "[0m");
 
             }
+
             //returning to starting values
             SetupBot.currentIndex=0;
             SetupBot.failed=false;
@@ -87,6 +93,8 @@ public class App {
             SetupBot.preOperatorBuffer=new StringBuffer("");
             App.calculationNumbersStack=new Stack<>();
         }
+
+        //closing the scanner and printing the exit message
         InputStringScanner.close();
         System.out.println("___________________________________________________________" +
                 "\nThank you very much for using our wonderful program ✨✨✨" +
