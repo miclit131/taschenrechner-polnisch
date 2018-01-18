@@ -3,6 +3,8 @@ package de.hdm_stuttgart.mi.se1.project;
 import de.hdm_stuttgart.mi.se1.exceptions.ExceptionCluster;
 import de.hdm_stuttgart.mi.se1.exceptions.*;
 
+import java.util.Arrays;
+
 public class SetupBot {
     public static StringBuffer preOperatorBuffer = new StringBuffer("");
     public static int currentIndex = 0;
@@ -12,6 +14,7 @@ public class SetupBot {
 
     static public void sort(String[] unsortedStringSplit) throws ExceptionCluster {
         while (reading) {
+
             for (int i = currentIndex; i < unsortedStringSplit.length; i++) {
                 if (isOperator(unsortedStringSplit[i])) {
                     SetupBot.preOperatorBuffer.append(unsortedStringSplit[i] + " ");
@@ -67,10 +70,16 @@ public class SetupBot {
         } else if (SetupBot.currentIndex != unsortedStringSplit.length) {
             SetupBot.sort(unsortedStringSplit);
         }else if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size()==0){
-            throw new EmptyNumberStackException();
+            throw new EmptyEntryException();
         }
     }
-public static void showResult() throws InputUnbalancedException,EmptyNumberStackException{
+
+    /**
+     *
+     * @throws InputUnbalancedException there are too many numbers in the result stack
+     * @throws EmptyEntryException //TODO what happens
+     */
+    public static void showResult() throws InputUnbalancedException,EmptyEntryException{
     if (!SetupBot.failed) {
         //TODO case needed size<=1
         if(App.calculationNumbersStack.size()==1){
@@ -78,8 +87,6 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
             //      System.out.println((char)27 + "[31m" + "ERROR MESSAGE IN RED"+(char)27 +"[0m");
         }else if (App.calculationNumbersStack.size()>1){
            throw new InputUnbalancedException();
-        }else{
-            throw new EmptyNumberStackException();
         }
     }
 }
@@ -132,7 +139,7 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
                 MathOperation.subtract();
                 break;
             case "*":
-                MathOperation.mulitply();
+                MathOperation.multiply();
                 break;
             case "/":
                 MathOperation.divide();
@@ -212,14 +219,14 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
         }
 
 //in case it is a decimal number
-        if (!(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'b',undefinedNumber))
-                && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber))
-                && !(checkIndex(1,'0',undefinedNumber)&& checkIndex(2,'b',undefinedNumber))
-                && !(checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber))
-                && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'B',undefinedNumber))
-                && !(checkIndex(0,'0',undefinedNumber) && checkIndex(1,'X',undefinedNumber))
-                && !(checkIndex(1,'0',undefinedNumber)&& checkIndex(2,'B',undefinedNumber))
-                && !(checkIndex(1,'0',undefinedNumber) && checkIndex(2,'X',undefinedNumber))) {
+        if (!(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'b',undefinedNumber))
+                && !(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'x',undefinedNumber))
+                && !(checkIfIndexIs(1,'0',undefinedNumber)&& checkIfIndexIs(2,'b',undefinedNumber))
+                && !(checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'x',undefinedNumber))
+                && !(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'B',undefinedNumber))
+                && !(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'X',undefinedNumber))
+                && !(checkIfIndexIs(1,'0',undefinedNumber)&& checkIfIndexIs(2,'B',undefinedNumber))
+                && !(checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'X',undefinedNumber))) {
 
             for (int i = 0; i < exponentialLiteralIndex; i++) {
                 int referencePoint = decimalLiteralIndex - 1;
@@ -279,7 +286,7 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
                     case 'e':
                         // if (e at position 1 and E Literal at position 2
                         // ||e at position 2,no numbers have been evaluated until e, e is the last position, first position is not 0 )
-                        if (i==0 && exponentialLiteralIndex==1||i==1 && numberValue==0 && i==exponentialLiteralIndex-1 && !(checkIndex(0,'0',undefinedNumber))) {
+                        if (i==0 && exponentialLiteralIndex==1||i==1 && numberValue==0 && i==exponentialLiteralIndex-1 && !(checkIfIndexIs(0,'0',undefinedNumber))) {
                             numberValue=numberValue+Math.E;
                         }else {
                             //TODO what is when "e" stands within of a word which is  wrong as a whole
@@ -290,11 +297,11 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
                         //TODO case pi use LiteralAbuseException if not first to or 2nd and 3rd character are p i
                         //TODO if pi use Math.PI , almost the same if conditions as the 'e' Literal
                         //TODO -pi and piE2 should be possible refer e Literal
-                    case 'p' : if(!checkIndex((i+1),'i',undefinedNumber)){
+                    case 'p' : if(!checkIfIndexIs((i+1),'i',undefinedNumber)){
                         errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
                                 "\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||" +
                                 "\n  ||for numbers or hexadecimal/binary numbers                              ||");
-                    }else if(i==0 && exponentialLiteralIndex==2 ||i==1 && numberValue==0 && i+1==exponentialLiteralIndex-1 && !(checkIndex(0,'0',undefinedNumber))){
+                    }else if(i==0 && exponentialLiteralIndex==2 ||i==1 && numberValue==0 && i+1==exponentialLiteralIndex-1 && !(checkIfIndexIs(0,'0',undefinedNumber))){
                         numberValue=numberValue+Math.PI;
                         i++;
                     }else{
@@ -310,10 +317,10 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
                 }
             }
 //case  if binary number
-        } else if (checkIndex(0,'0',undefinedNumber) && checkIndex(1,'b',undefinedNumber)
-                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'b',undefinedNumber)
-                ||checkIndex(0,'0',undefinedNumber) && checkIndex(1,'B',undefinedNumber)
-                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'B',undefinedNumber)) {
+        } else if (checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'b',undefinedNumber)
+                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'b',undefinedNumber)
+                || checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'B',undefinedNumber)
+                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'B',undefinedNumber)) {
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
@@ -337,10 +344,10 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
             }
 
 //case if hexadezimal  number
-        } else if (checkIndex(0,'0',undefinedNumber) && checkIndex(1,'x',undefinedNumber)
-                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'x',undefinedNumber)
-                ||checkIndex(0,'0',undefinedNumber) && checkIndex(1,'X',undefinedNumber)
-                || checkIndex(1,'0',undefinedNumber) && checkIndex(2,'X',undefinedNumber)) {
+        } else if (checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'x',undefinedNumber)
+                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'x',undefinedNumber)
+                || checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'X',undefinedNumber)
+                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'X',undefinedNumber)) {
            // int lastIndexOfHexa = exponentialLiteralIndex - 1;
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
@@ -481,13 +488,46 @@ public static void showResult() throws InputUnbalancedException,EmptyNumberStack
             return preparedNumber.toString();
         }
     }
-   static private boolean checkIndex (int index, char character,String undefinedNumber){
-        try{
-            char unclarifiedCharacter=undefinedNumber.charAt(index);
-            return unclarifiedCharacter==character;
-        }catch(IndexOutOfBoundsException e){
-            return false;
+   static private boolean checkIfIndexIs(int index, char character, String undefinedNumber) {
+       try {
+           char unclarifiedCharacter = undefinedNumber.charAt(index);
+           return unclarifiedCharacter == character;
+       } catch (IndexOutOfBoundsException e) {
+           return false;
+       }
+   }
+    static public String [] splitSafe (String insecureString)throws ExceptionCluster {
+        String[] unsecureStringArray = insecureString.split(" ");
+        if (unsecureStringArray.length != 0 && !insecureString.equals("")) {
+            StringBuilder secureInput=new StringBuilder("");
+           for(String i : unsecureStringArray ){
+               if(!i.equals("")){
+                   secureInput.append(i+" ");
+               }
+           }
+           alertQuit(secureInput.toString());
+            return secureInput.toString().split(" ");
+        } else {
+            throw new EmptyEntryException();
+
         }
     }
+    static private void alertQuit(String secureInputString){
+        int firstQIndex=secureInputString.indexOf('q');
+        int endOfString=secureInputString.length()-1;
+
+        while(firstQIndex<endOfString){
+        if(secureInputString.indexOf('q')!=-1) {
+            if (checkIfIndexIs(firstQIndex + 1, 'u', secureInputString)
+                    && checkIfIndexIs(firstQIndex + 2, 'i', secureInputString)
+                    && checkIfIndexIs(firstQIndex + 3, 't', secureInputString)
+                    ){throw new FoundQuitException();
+            }else{
+                firstQIndex=secureInputString.indexOf('q',firstQIndex+1);
+            }
+        }else{break;}
+        }
+    }
+
 }
 
