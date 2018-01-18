@@ -9,7 +9,7 @@ public class SetupBot {
     public static StringBuffer preOperatorBuffer = new StringBuffer("");
     public static int currentIndex = 0;
     public static boolean reading = true;
-    public static boolean failed=false;
+    public static boolean failed = false;
 
 
     static public void sort(String[] unsortedStringSplit) throws ExceptionCluster {
@@ -43,12 +43,11 @@ public class SetupBot {
                 }
             }
         }
-        if(!failed) {
+        if (!failed) {
             App.operatorArray = SetupBot.preOperatorBuffer.toString().split(" ");
             SetupBot.solve(unsortedStringSplit);
         }
     }
-
 
 
     private static void solve(String[] unsortedStringSplit) throws ExceptionCluster {
@@ -64,32 +63,30 @@ public class SetupBot {
         App.operatorArray = null;
         reading = true;
 
-        if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size()!=0) {
+        if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size() != 0) {
             App.result = App.calculationNumbersStack.peek();
             reading = false;
         } else if (SetupBot.currentIndex != unsortedStringSplit.length) {
             SetupBot.sort(unsortedStringSplit);
-        }else if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size()==0){
+        } else if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size() == 0) {
             throw new EmptyEntryException();
         }
     }
 
     /**
-     *
-     * @throws InputUnbalancedException there are too many numbers in the result stack
-     * @throws EmptyEntryException //TODO what happens
+     * @throws InputUnbalancedException there are too many numbers
+     *                                  in the calculation stack before the result can be printed
      */
-    public static void showResult() throws InputUnbalancedException,EmptyEntryException{
-    if (!SetupBot.failed) {
-        //TODO case needed size<=1
-        if(App.calculationNumbersStack.size()==1){
-            System.out.println("RESULT: "+(char)27 + "[34m"+App.result+(char)27 + "[0m"+ "\n");
-            //      System.out.println((char)27 + "[31m" + "ERROR MESSAGE IN RED"+(char)27 +"[0m");
-        }else if (App.calculationNumbersStack.size()>1){
-           throw new InputUnbalancedException();
+    public static void showResult() throws InputUnbalancedException {
+        if (!SetupBot.failed) {
+            if (App.calculationNumbersStack.size() == 1) {
+                System.out.println("RESULT: " + (char) 27 + "[34m" + App.result + (char) 27 + "[0m" + "\n");
+            } else if (App.calculationNumbersStack.size() > 1) {
+                throw new InputUnbalancedException();
+            }
         }
     }
-}
+
     /**
      * Helping Method for the filter-process
      *
@@ -130,7 +127,7 @@ public class SetupBot {
      *                                      does nothing if undefinedCalculationOperation is not a binary operator
      *                                      activates the binary MathOperation if is found
      */
-    private static void activateBinaryOperator(String undefinedCalculationOperation) throws ExceptionCluster{
+    private static void activateBinaryOperator(String undefinedCalculationOperation) throws ExceptionCluster {
         switch (undefinedCalculationOperation) {
             case "+":
                 MathOperation.add();
@@ -190,7 +187,7 @@ public class SetupBot {
     //TODO JavaDoc and include method into the programm , only use this method if string includes special signs otherwise performance ist damaged
     //TODO use if before activating this method
     // method for tracking Literals such as binary hexa or 2E10 -> JavaDOc
-    private static String convertLiterals(String undefinedNumber)throws ExceptionCluster {
+    private static String convertLiterals(String undefinedNumber) throws ExceptionCluster {
 
         StringBuilder preparedNumber = new StringBuilder("");
         StringBuilder errorCalls = new StringBuilder("");
@@ -219,14 +216,14 @@ public class SetupBot {
         }
 
 //in case it is a decimal number
-        if (!(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'b',undefinedNumber))
-                && !(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'x',undefinedNumber))
-                && !(checkIfIndexIs(1,'0',undefinedNumber)&& checkIfIndexIs(2,'b',undefinedNumber))
-                && !(checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'x',undefinedNumber))
-                && !(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'B',undefinedNumber))
-                && !(checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'X',undefinedNumber))
-                && !(checkIfIndexIs(1,'0',undefinedNumber)&& checkIfIndexIs(2,'B',undefinedNumber))
-                && !(checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'X',undefinedNumber))) {
+        if (!(checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'b', undefinedNumber))
+                && !(checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'x', undefinedNumber))
+                && !(checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'b', undefinedNumber))
+                && !(checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'x', undefinedNumber))
+                && !(checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'B', undefinedNumber))
+                && !(checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'X', undefinedNumber))
+                && !(checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'B', undefinedNumber))
+                && !(checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'X', undefinedNumber))) {
 
             for (int i = 0; i < exponentialLiteralIndex; i++) {
                 int referencePoint = decimalLiteralIndex - 1;
@@ -286,28 +283,29 @@ public class SetupBot {
                     case 'e':
                         // if (e at position 1 and E Literal at position 2
                         // ||e at position 2,no numbers have been evaluated until e, e is the last position, first position is not 0 )
-                        if (i==0 && exponentialLiteralIndex==1||i==1 && numberValue==0 && i==exponentialLiteralIndex-1 && !(checkIfIndexIs(0,'0',undefinedNumber))) {
-                            numberValue=numberValue+Math.E;
-                        }else {
+                        if (i == 0 && exponentialLiteralIndex == 1 || i == 1 && numberValue == 0 && i == exponentialLiteralIndex - 1 && !(checkIfIndexIs(0, '0', undefinedNumber))) {
+                            numberValue = numberValue + Math.E;
+                        } else {
                             //TODO what is when "e" stands within of a word which is  wrong as a whole
                             throw new LiteralAbuseException("\nCharacter:'e' at Index " + i + " of " + undefinedNumber + " is a literal for the euler number" +
                                     "\n>>||the euler number is a Value itself and can not be a Part of a number||");
                         }
                         break;
-                        //TODO case pi use LiteralAbuseException if not first to or 2nd and 3rd character are p i
-                        //TODO if pi use Math.PI , almost the same if conditions as the 'e' Literal
-                        //TODO -pi and piE2 should be possible refer e Literal
-                    case 'p' : if(!checkIfIndexIs((i+1),'i',undefinedNumber)){
-                        errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
-                                "\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||" +
-                                "\n  ||for numbers or hexadecimal/binary numbers                              ||");
-                    }else if(i==0 && exponentialLiteralIndex==2 ||i==1 && numberValue==0 && i+1==exponentialLiteralIndex-1 && !(checkIfIndexIs(0,'0',undefinedNumber))){
-                        numberValue=numberValue+Math.PI;
-                        i++;
-                    }else{
-                        throw new LiteralAbuseException("\nCharacter:'pi' in " + undefinedNumber + " is a literal for the circular number" +
-                                "\n>>||the circular number is a value itself and can not be a Part of a number||");
-                    }
+                    //TODO case pi use LiteralAbuseException if not first to or 2nd and 3rd character are p i
+                    //TODO if pi use Math.PI , almost the same if conditions as the 'e' Literal
+                    //TODO -pi and piE2 should be possible refer e Literal
+                    case 'p':
+                        if (!checkIfIndexIs((i + 1), 'i', undefinedNumber)) {
+                            errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
+                                    "\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||" +
+                                    "\n  ||for numbers or hexadecimal/binary numbers                              ||");
+                        } else if (i == 0 && exponentialLiteralIndex == 2 || i == 1 && numberValue == 0 && i + 1 == exponentialLiteralIndex - 1 && !(checkIfIndexIs(0, '0', undefinedNumber))) {
+                            numberValue = numberValue + Math.PI;
+                            i++;
+                        } else {
+                            throw new LiteralAbuseException("\nCharacter:'pi' in " + undefinedNumber + " is a literal for the circular number" +
+                                    "\n>>||the circular number is a value itself and can not be a Part of a number||");
+                        }
                         break;
                     default:
                         errorCalls.append("\nCharacter:" + undefinedNumber.charAt(i) + " at Index " + i + " of " + undefinedNumber + " is an unknown symbol " +
@@ -317,10 +315,10 @@ public class SetupBot {
                 }
             }
 //case  if binary number
-        } else if (checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'b',undefinedNumber)
-                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'b',undefinedNumber)
-                || checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'B',undefinedNumber)
-                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'B',undefinedNumber)) {
+        } else if (checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'b', undefinedNumber)
+                || checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'b', undefinedNumber)
+                || checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'B', undefinedNumber)
+                || checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'B', undefinedNumber)) {
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
@@ -344,19 +342,19 @@ public class SetupBot {
             }
 
 //case if hexadezimal  number
-        } else if (checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'x',undefinedNumber)
-                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'x',undefinedNumber)
-                || checkIfIndexIs(0,'0',undefinedNumber) && checkIfIndexIs(1,'X',undefinedNumber)
-                || checkIfIndexIs(1,'0',undefinedNumber) && checkIfIndexIs(2,'X',undefinedNumber)) {
-           // int lastIndexOfHexa = exponentialLiteralIndex - 1;
+        } else if (checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'x', undefinedNumber)
+                || checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'x', undefinedNumber)
+                || checkIfIndexIs(0, '0', undefinedNumber) && checkIfIndexIs(1, 'X', undefinedNumber)
+                || checkIfIndexIs(1, '0', undefinedNumber) && checkIfIndexIs(2, 'X', undefinedNumber)) {
+            // int lastIndexOfHexa = exponentialLiteralIndex - 1;
             if (undefinedNumber.charAt(0) == '-') {
                 positive = false;
             }
           /*  if (exponentialLiteralIndex == undefinedNumber.length() - 1) {
                 lastIndexOfHexa = undefinedNumber.length() - 1;
             }*/
-          //  lastIndexOfHexa=undefinedNumber.length()-1;
-            int referencePoint =undefinedNumber.length()-1;
+            //  lastIndexOfHexa=undefinedNumber.length()-1;
+            int referencePoint = undefinedNumber.length() - 1;
 
             for (int i = undefinedNumber.indexOf('0') + 2; i <= referencePoint; i++) {
                 switch (undefinedNumber.charAt(i)) {
@@ -482,50 +480,56 @@ public class SetupBot {
         }
 
         //preparedNumber.append(errorCalls);
-        if(errorCalls.length()!=0){
+        if (errorCalls.length() != 0) {
             throw new NumberStructureException(errorCalls.toString());
-        }else {
+        } else {
             return preparedNumber.toString();
         }
     }
-   static private boolean checkIfIndexIs(int index, char character, String undefinedNumber) {
-       try {
-           char unclarifiedCharacter = undefinedNumber.charAt(index);
-           return unclarifiedCharacter == character;
-       } catch (IndexOutOfBoundsException e) {
-           return false;
-       }
-   }
-    static public String [] splitSafe (String insecureString)throws ExceptionCluster {
+
+    static private boolean checkIfIndexIs(int index, char character, String undefinedNumber) {
+        try {
+            char unclarifiedCharacter = undefinedNumber.charAt(index);
+            return unclarifiedCharacter == character;
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    static public String[] splitSafe(String insecureString) throws ExceptionCluster {
         String[] unsecureStringArray = insecureString.split(" ");
         if (unsecureStringArray.length != 0 && !insecureString.equals("")) {
-            StringBuilder secureInput=new StringBuilder("");
-           for(String i : unsecureStringArray ){
-               if(!i.equals("")){
-                   secureInput.append(i+" ");
-               }
-           }
-           alertQuit(secureInput.toString());
+            StringBuilder secureInput = new StringBuilder("");
+            for (String i : unsecureStringArray) {
+                if (!i.equals("")) {
+                    secureInput.append(i + " ");
+                }
+            }
+            alertQuit(secureInput.toString());
             return secureInput.toString().split(" ");
         } else {
             throw new EmptyEntryException();
 
         }
     }
-    static private void alertQuit(String secureInputString){
-        int firstQIndex=secureInputString.indexOf('q');
-        int endOfString=secureInputString.length()-1;
 
-        while(firstQIndex<endOfString){
-        if(secureInputString.indexOf('q')!=-1) {
-            if (checkIfIndexIs(firstQIndex + 1, 'u', secureInputString)
-                    && checkIfIndexIs(firstQIndex + 2, 'i', secureInputString)
-                    && checkIfIndexIs(firstQIndex + 3, 't', secureInputString)
-                    ){throw new FoundQuitException();
-            }else{
-                firstQIndex=secureInputString.indexOf('q',firstQIndex+1);
+    static private void alertQuit(String secureInputString) {
+        int firstQIndex = secureInputString.indexOf('q');
+        int endOfString = secureInputString.length() - 1;
+
+        while (firstQIndex < endOfString) {
+            if (secureInputString.indexOf('q') != -1) {
+                if (checkIfIndexIs(firstQIndex + 1, 'u', secureInputString)
+                        && checkIfIndexIs(firstQIndex + 2, 'i', secureInputString)
+                        && checkIfIndexIs(firstQIndex + 3, 't', secureInputString)
+                        ) {
+                    throw new FoundQuitException();
+                } else {
+                    firstQIndex = secureInputString.indexOf('q', firstQIndex+1);
+                }
+            } else {
+                break;
             }
-        }else{break;}
         }
     }
 

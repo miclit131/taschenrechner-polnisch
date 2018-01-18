@@ -12,7 +12,7 @@ import java.util.Stack;
 /**
  * Unit tests
  */
-public class TestApp {
+public class TestMathOperationMethods {
 
     /**
      * resetting all values after the test in order to execute the following tests

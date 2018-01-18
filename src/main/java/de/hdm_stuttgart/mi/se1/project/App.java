@@ -55,7 +55,7 @@ public class App {
                         +(char)27 + "[32m"+e.getMessage()+(char)27 + "[0m");
                 boolean ask=true;
                 while(ask) {
-                    System.out.print("please type yes or no , do u want to quit the program?" +
+                    System.out.print("please type "+(char)27 + "[32m"+ "yes "+(char)27 + "[0m"+"or " +(char)27 + "[31m"+"no"+(char)27 + "[0m"+" , do u want to quit the program?" +
                             "\nANSWER:");
                     String decision = InputStringScanner.nextLine();
                     switch (decision) {
