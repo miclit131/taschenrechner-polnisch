@@ -4,10 +4,29 @@ import de.hdm_stuttgart.mi.se1.exceptions.*;
 
 import java.util.Stack;
 
+/**
+ *  class which gets the input as suitable data types(numbers as double values in a stack
+ *  and operators as a String in a String[]) by using the Converter.class.
+ *  Uses sort to parse the input string and then the solve method.
+ *  After using the sort method the result is saved in the Calculator.class
+ *  and can be printed through the showResult method.
+ */
 public class Calculator {
-
+    /**
+     * calculationNumberStack is the memory location
+     * for numbers currently evaluated and the final result
+     */
     public static Stack<Double> calculationNumbersStack = new Stack<>();
+    /**
+     * operatorArray is the memory location for all operators
+     * that currently got parsed and then evaluated by sort which uses
+     * the private method solve. Operators are removed from the array once used.
+     */
     private static String[] operatorArray;
+    /**
+     * final place where the result is saved at the end of the repeated
+     * parse and solve process.
+     */
     public static double result;
     /**
      * CurrentIndex is used, by the methods sort and solve,
@@ -15,16 +34,23 @@ public class Calculator {
      * and control if the sort / solve process is finished.
      */
     public static int currentIndex = 0;
+    /**
+     * boolean that switches between parse mode and solve mode
+     */
     public static boolean reading = true;
+    /**
+     * before the operators can be saved in the operatorArray they need to
+     * be collected at a place.
+     */
     public static StringBuffer preOperatorBuffer = new StringBuffer("");
 
     /**
      * The sort method analyzes the input Array until the first set of operators
      * and sorts them into 2 data structures (operators to a String[] and number
-     * into a stack<double>).
-     * <p>
+     * into a stack).
+     *
      * Numbers get converted from String to a double number value by convertLiterals method.
-     * <p>
+     *
      * When the first part of the input is sorted the sort method activates solve,
      * which calculates the current sorted part.
      *
@@ -128,7 +154,7 @@ public class Calculator {
      * @param undefinedString Takes input String into a Switch
      *                        and compares it with the defined Operators.
      * @return boolean
-     * <p>
+     *
      * boolean==true if String is a defined operator
      * boolean==false if String is not a defined operator
      */

@@ -21,9 +21,18 @@ public class App {
     private static boolean runProgram = true;
     public static String[] InputStringArray;
 
+    /**
+     * main interface of the program, connecting frame output with the functions
+     *
+     * @param args is not used in the program
+     *        a scanner takes the input values that are evaluated
+     */
     public static void main(String[] args) {
 
-        //Scanner for the main source of the InputStream / Userinterface
+        /**
+         * Scanner for the main source of the InputStream / Userinterface
+         */
+
         final Scanner InputStringScanner = new Scanner(System.in);
 
         //starting text first "frame" of the program

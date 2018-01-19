@@ -10,7 +10,10 @@ import org.junit.Test;
 import java.util.Stack;
 
 /**
- * Unit tests
+ * Unit tests for all possible math operations that can be used in the program.
+ * Using testHelper to simulate the process of the App.class and then check
+ * if the result fits. Only tests valuable entries, exceptions are tested in
+ * TestException.class.
  */
 public class TestMathOperationMethods {
 

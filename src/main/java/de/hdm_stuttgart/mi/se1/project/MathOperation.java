@@ -10,7 +10,7 @@ import de.hdm_stuttgart.mi.se1.exceptions.OperatorLimitException;
  * puts the answer on top of App.calculationNumbersStack
  * unary operators:  takes top-most item of App.calculationNumbersStack
  * executes unary calculation
- * puts result on top of App.calculationNumbersStack<Double>
+ * puts result on top of App.calculationNumbersStack as a double
  */
 class MathOperation {
 

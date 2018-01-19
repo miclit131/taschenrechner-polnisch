@@ -2,15 +2,27 @@ package de.hdm_stuttgart.mi.se1.project;
 
 import de.hdm_stuttgart.mi.se1.exceptions.*;
 
+/**
+ * The class for converting strings to double values
+ * or converting  strings that can cause exception troubles
+ * into strings that are less troubling
+ *
+ */
 public class Converter {
+    /**
+     * boolean that tracks if the number is positive or not
+     */
     static private boolean positive = true;
+    /**
+     * boolean that tracks if the exponential number behind the
+     * exponentialLiteral "E" is positive
+     */
     static private boolean positiveExponent = true;
-    // static double exponentialNumber = 0;
 
     /**
-     * @param undefinedNumber parses the <String>undefinedNumber</String> and builds up
+     * @param undefinedNumber parses the undefinedNumber and builds up
      *                        a double value by decimal places
-     * @return <Double>undefinedNumber converted to double</Double>
+     * @return undefinedNumber converted to double
      * @throws ExceptionCluster throws exception if pi or e Literal are used wrong
      *                          or a NumberStructureException occurs
      */
@@ -87,6 +99,11 @@ public class Converter {
 
 
     /**
+     * a method used to remove all blanks in the input that are placed, which could cause
+     * troubles in case they get recognized as a number and then converted into the number 0.
+     *
+     * Also uses the alertQuit to check if the is the word  "quit" in the input at any point.
+     *
      * @param insecureString Removing all blanks
      * @return secureInput changed into an String[] after being checked by alertQuit
      * @throws ExceptionCluster EmptyEntryException thrown by splitSafe when
@@ -145,7 +162,7 @@ public class Converter {
      * is outside of the String
      *
      * @param index           The index that needs to be checked
-     * @param character       The character that is looked for at the indec
+     * @param character       The character that is looked for at the indices
      * @param undefinedNumber String in which the character is looked for
      * @return Boolean which tells if at the character is found at a specific index
      * true when it is the character and false when it was not found or the index is
@@ -169,7 +186,7 @@ public class Converter {
      * @param twoIsx     boolean that tells if 0 is the Value at Index 2
      * @param oneIsX     boolean that tells if 0 is the Value at Index 1
      * @param twoIsX     boolean that tells if 0 is the Value at Index 2
-     * @return <boolean>true</boolean> If a String with those boolean values
+     * @return true If a String with those boolean values
      * fulfils a certain condition.
      * Either it has to be the first 2 letters are 0X / 0x
      * or the second and third letters are 0x / 0X
@@ -191,7 +208,7 @@ public class Converter {
      * @param twoIsB     boolean that tells if 0 is the Value at Index 2
      * @param oneIsb     boolean that tells if 0 is the Value at Index 1
      * @param twoIsb     boolean that tells if 0 is the Value at Index 2
-     * @return <boolean>true</boolean> If a String with those boolean values
+     * @return true If a String with those boolean values
      * fulfils a certain condition.
      * Either it has to be the first 2 letters are 0B / 0b
      * or the second and third letters are 0B / 0b
@@ -213,9 +230,9 @@ public class Converter {
      * @param exponentialLiteralIndex The Index is needed to see when the decimal number
      *                                ends. If there is no exponential index the string
      *                                is evaluated as a decimal number until the last index.
-     * @param undefinedNumber         <String>undefinedNumber</String> is a string that gets
+     * @param undefinedNumber         undefinedNumber is a string that gets
      *                                converted into a decimal number.
-     * @return <double>numberValue</double>,the value of the decimal number as a double value.
+     * @return numberValue the value of the decimal number as a double value.
      * @throws LiteralAbuseException    throws LiteralAbuseException when 'pi' or 'e'
      *                                  are written within a number.
      * @throws NumberStructureException Throws NumberStructureException when something has been
@@ -319,9 +336,9 @@ public class Converter {
      *
      * @param exponentialLiteralIndex The Index that is used to build up the decimal number
      *                                in the decimal base logic.  a*2^1+b*2^0,c*2^-1 = ab,c
-     * @param undefinedNumber         <String>undefinedNumber</String> is a string that gets
+     * @param undefinedNumber         undefinedNumber is a string that gets
      *                                converted into a decimal number
-     * @return <double>numberValue</double>,the value of the binary number as a double value.
+     * @return numberValue the value of the binary number as a double value.
      * @throws NumberStructureException Throws NumberStructureException when something has been
      *                                  appended into errorCalls, because of a digit that couldn't
      *                                  be recognized or was set at the wrong point.
@@ -360,9 +377,9 @@ public class Converter {
      * The method builds up a double value depending on the indices, it builds up
      * the number in this way : a*16^x...b*16^2+c*16^1+d*16^0
      *
-     * @param undefinedNumber <String>undefinedNumber</String> is a string that gets
+     * @param undefinedNumber undefinedNumber is a string that gets
      *                        converted into a hexadecimal number
-     * @return <double>numberValue</double>,the value of the binary number as a double value.
+     * @return numberValue the value of the hexadecimal number as a double value.
      * @throws NumberStructureException Throws NumberStructureException when something has been
      *                                  appended into errorCalls, because of a digit that couldn't
      *                                  be recognized or was set at the wrong point.
@@ -447,11 +464,11 @@ public class Converter {
      * the number in this way : a*10^1+b*10^0,c*10^-1 end of number or exponentialLiteralIndex = ab,c
      *
      * @param exponentialLiteralIndex is the index from where this method starts to evaluate
-     *                                the <String>undefinedNumber</String> and analyzes until
-     *                                the end of <String>undefinedNumber</String>.
-     * @param undefinedNumber         <String>undefinedNumber</String> is a string that gets
+     *                                the undefinedNumber and analyzes until
+     *                                the end of undefinedNumber.
+     * @param undefinedNumber         undefinedNumber is a string that gets
      *                                converted into an exponential number.
-     * @return <double>exponentialNumber</double>,the value of the decimal number as a double value.
+     * @return exponentialNumber the value of the decimal number as a double value.
      * @throws LiteralAbuseException    throws LiteralAbuseException when 'pi' or 'e'
      *                                  are written within a number.
      * @throws NumberStructureException Throws NumberStructureException when something has been
