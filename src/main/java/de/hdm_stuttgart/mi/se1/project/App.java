@@ -27,9 +27,22 @@ public class App {
         final Scanner InputStringScanner = new Scanner(System.in);
 
         //starting text first "frame" of the program
-        System.out.println("Welcome to the best RPN calculator in the whoooole world!!! \uD83C\uDF0D \uD83C\uDF38"
-                + "\nHave fun playing with numbers little nerd. \uD83C\uDFAE"
-                + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("Welcome to the best RPN calculator in the whoooole world!!!"
+                + "\nHave fun playing with numbers little nerd."
+                + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" +
+                "\n General CALCULATION RULES:\n"+
+                "||-all RPN rules are working: number number operator -> 2 2 + = 4 ||\n" +
+                "|| 1 2 2 + / -> 1 / (2 + 2) = 0.25 and 2 2 + 2 / ->(2 + 2) / 2 = 2||\n" +
+                "||-write - infront of a number ~ as an operator                   ||\n" +
+                "|| behind it to negate the number                                 ||\n" +
+                "||-\"e\" will be used as the euler number                           ||\n" +
+                "||-\"pi\" will be used as the circular number                       ||\n" +
+                "||-hexadecimal numbers start with 0x or 0X                        ||\n" +
+                "|| and binary numbers with 0b or 0B                               ||\n" +
+                "||-typing \"quit\" will end the program or asks you if you want to  ||\n" +
+                "||-writing Exxxx at the end of a binary or decimal number         ||\n" +
+                "||will calculate the number like this : number * 10^(xxxx)        ||\n" +
+                "||only use whole numbers with the exponential literal \"E\"         ||\n");
         while (runProgram) {
             System.out.println("___________________________________________________________"
                     + "\nDo you want to make calculations? Or are you tired of maths? "
@@ -93,10 +106,9 @@ public class App {
 
         //closing the scanner and printing the exit message
         InputStringScanner.close();
-        System.out.println("___________________________________________________________" +
-                "\nThank you very much for using our wonderful program ✨✨✨" +
-                "\nPlease enter your credit card number here: _ _ _ _ _ _ _ _ _" +
-                (char) 27 + "[32m" + "\n \uD83D\uDCB0 \uD83D\uDCB8 \uD83D\uDCB0 \uD83D\uDCB8 \uD83D\uDCB0 \uD83D\uDCB8 \uD83D\uDCB0 \uD83D\uDCB8" + (char) 27 + "[0m");
+        System.out.println("___________________________________________________________\n" +
+                 "Thank you very much for using our wonderful program"+
+                 "\nPlease enter your credit card number here: _ _ _ _ _ _ _ _ _" );
 
     }
 }
