@@ -2,7 +2,8 @@ package de.hdm_stuttgart.mi.se1;
 
 import de.hdm_stuttgart.mi.se1.exceptions.*;
 import de.hdm_stuttgart.mi.se1.project.App;
-import de.hdm_stuttgart.mi.se1.project.SetupBot;
+import de.hdm_stuttgart.mi.se1.project.Converter;
+import de.hdm_stuttgart.mi.se1.project.Calculator;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,11 +24,10 @@ public class TestExceptions {
     @SuppressWarnings("Duplicates")
     @After
     public void resetAll() {
-        SetupBot.currentIndex = 0;
-        SetupBot.failed = false;
-        SetupBot.reading = true;
-        App.calculationNumbersStack = new Stack<>();
-        SetupBot.preOperatorBuffer = new StringBuffer("");
+        Calculator.currentIndex = 0;
+        Calculator.reading = true;
+        Calculator.calculationNumbersStack = new Stack<>();
+        Calculator.preOperatorBuffer = new StringBuffer("");
     }
 
     private String[] generateTestArray(String fakeScannerInputString) {
@@ -40,32 +40,32 @@ public class TestExceptions {
     @Test
     public void testNumberStructureException() {
         thrown.expect(NumberStructureException.class);
-            SetupBot.sort(generateTestArray("2+"));
+            Calculator.sort(generateTestArray("2+"));
     }
     @Test
     public void testNumberStructureException2() {
         thrown.expect(NumberStructureException.class);
-             SetupBot.sort(generateTestArray("2+ 2 +"));
+             Calculator.sort(generateTestArray("2+ 2 +"));
     }
     @Test
     public void testNumberStructureException3() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("2h-"));
+        Calculator.sort(generateTestArray("2h-"));
     }
     @Test
     public void testNumberStructureException4() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("2h"));
+        Calculator.sort(generateTestArray("2h"));
     }
     @Test
     public void testNumberStructureException5() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("2 2g- +"));
+        Calculator.sort(generateTestArray("2 2g- +"));
     }
     @Test
     public void testNumberStructureException6() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("ob1"));
+        Calculator.sort(generateTestArray("ob1"));
     }
 
     /**
@@ -74,17 +74,17 @@ public class TestExceptions {
     @Test
     public void testNumberStructureExceptionBinary() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0b2"));
+        Calculator.sort(generateTestArray("0b2"));
     }
     @Test
     public void testNumberStructureExceptionBinary2() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("-0b3"));
+        Calculator.sort(generateTestArray("-0b3"));
     }
     @Test
     public void testNumberStructureExceptionBinary3() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("2 -0b3 +"));
+        Calculator.sort(generateTestArray("2 -0b3 +"));
     }
 
     /**
@@ -93,22 +93,22 @@ public class TestExceptions {
     @Test
     public void testNumberStructureExceptionHexa() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0x-2"));
+        Calculator.sort(generateTestArray("0x-2"));
     }
     @Test
     public void testNumberStructureExceptionHexa2() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0xAa-"));
+        Calculator.sort(generateTestArray("0xAa-"));
     }
     @Test
     public void testNumberStructureExceptionHexa3() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("-0xa-"));
+        Calculator.sort(generateTestArray("-0xa-"));
     }
     @Test
     public void testNumberStructureExceptionHexa4() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0xj"));
+        Calculator.sort(generateTestArray("0xj"));
     }
 
     /**
@@ -117,27 +117,27 @@ public class TestExceptions {
     @Test
     public void testNumberStructureExceptionExponential() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("2E0x2"));
+        Calculator.sort(generateTestArray("2E0x2"));
     }
     @Test
     public void testNumberStructureExceptionExponential2() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0b101E3-3"));
+        Calculator.sort(generateTestArray("0b101E3-3"));
     }
     @Test
     public void testNumberStructureExceptionExponential3() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0B0101E3-3"));
+        Calculator.sort(generateTestArray("0B0101E3-3"));
     }
     @Test
     public void testNumberStructureExceptionExponential4() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0b011E0b1"));
+        Calculator.sort(generateTestArray("0b011E0b1"));
     }
     @Test
     public void testNumberStructureExceptionExponential5() {
         thrown.expect(NumberStructureException.class);
-        SetupBot.sort(generateTestArray("0b1Ehello"));
+        Calculator.sort(generateTestArray("0b1Ehello"));
     }
     /**
     *TESTING OperatorLimitException with all binary operators,
@@ -146,56 +146,56 @@ public class TestExceptions {
     @Test
     public void testOperatorLimitException() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 +");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 +");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException2() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 2 + +");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 2 + +");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException3() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 *");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 *");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException4() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 2 + *");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 2 + *");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException5() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 2 + *");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 2 + *");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException6() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 2 * /");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 2 * /");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException7() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 2 - pow");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 2 - pow");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException8() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 -");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 -");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testOperatorLimitException9() {
         thrown.expect(OperatorLimitException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 pow");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2 pow");
+        Calculator.sort(App.InputStringArray);
     }
     /**
     *TESTING LiteralAbuseException with the euler number,
@@ -204,26 +204,26 @@ public class TestExceptions {
     @Test
     public void testLiteralAbuseExceptionEuler() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("0e");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("0e");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testLiteralAbuseExceptionEuler2() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("2e");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("2e");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testLiteralAbuseExceptionEuler3() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("e2");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("e2");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testLiteralAbuseExceptionEuler4() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("23e2E2");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("23e2E2");
+        Calculator.sort(App.InputStringArray);
     }
     /**
     * TESTING  LiteralAbuseException with the circular number,
@@ -232,32 +232,32 @@ public class TestExceptions {
     @Test
     public void testLiteralAbuseExceptionPI() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("0pi");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("0pi");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testLiteralAbuseExceptionPI2() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("pi0");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("pi0");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testLiteralAbuseExceptionPI3() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("5pi");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("5pi");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testLiteralAbuseExceptionPI4() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("pi55");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("pi55");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testLiteralAbuseExceptionPI5() {
         thrown.expect(LiteralAbuseException.class);
-        App.InputStringArray = SetupBot.splitSafe("22pi55");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("22pi55");
+        Calculator.sort(App.InputStringArray);
     }
 
     /**
@@ -266,26 +266,26 @@ public class TestExceptions {
     @Test
     public void testJustOperatorsException() {
         thrown.expect(JustOperatorsException.class);
-        App.InputStringArray = SetupBot.splitSafe("+");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("+");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testJustOperatorsException2() {
         thrown.expect(JustOperatorsException.class);
-        App.InputStringArray = SetupBot.splitSafe("~");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe(" sqrt ~");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testJustOperatorsException3() {
         thrown.expect(JustOperatorsException.class);
-        App.InputStringArray = SetupBot.splitSafe("+ /");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("+ /");
+        Calculator.sort(App.InputStringArray);
     }
     @Test
     public void testJustOperatorsException4() {
         thrown.expect(JustOperatorsException.class);
-        App.InputStringArray = SetupBot.splitSafe("~ sin");
-        SetupBot.sort(App.InputStringArray);
+        App.InputStringArray = Converter.splitSafe("~ sin");
+        Calculator.sort(App.InputStringArray);
     }
     /**
      * TESTING UnbalancedInputException
@@ -293,32 +293,32 @@ public class TestExceptions {
     @Test
     public void testInputUnbalancedException() {
         thrown.expect(InputUnbalancedException.class);
-        App.calculationNumbersStack=new Stack<>();
-        App.calculationNumbersStack.push(2.0);
-        App.calculationNumbersStack.push(3.0);
-        SetupBot.showResult();
+        Calculator.calculationNumbersStack=new Stack<>();
+        Calculator.calculationNumbersStack.push(2.0);
+        Calculator.calculationNumbersStack.push(3.0);
+        Calculator.showResult();
     }
     @Test
     public void testInputUnbalancedException2() {
         thrown.expect(InputUnbalancedException.class);
-        App.calculationNumbersStack=new Stack<>();
-        App.calculationNumbersStack.push(2.0+2.0);
-        App.calculationNumbersStack.push(3.0+Math.PI);
-        SetupBot.showResult();
+        Calculator.calculationNumbersStack=new Stack<>();
+        Calculator.calculationNumbersStack.push(2.0+2.0);
+        Calculator.calculationNumbersStack.push(3.0+Math.PI);
+        Calculator.showResult();
     }
     @Test
     public void testInputUnbalancedException3() {
         thrown.expect(InputUnbalancedException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 2");
-        SetupBot.sort(App.InputStringArray);
-        SetupBot.showResult();
+        App.InputStringArray = Converter.splitSafe("2 2");
+        Calculator.sort(App.InputStringArray);
+        Calculator.showResult();
     }
     @Test
     public void testInputUnbalancedException4() {
         thrown.expect(InputUnbalancedException.class);
-        App.InputStringArray = SetupBot.splitSafe("2 2 + 2 2 +");
-        SetupBot.sort(App.InputStringArray);
-        SetupBot.showResult();
+        App.InputStringArray = Converter.splitSafe("2 2 + 2 2 +");
+        Calculator.sort(App.InputStringArray);
+        Calculator.showResult();
     }
     /**
      * TESTING FoundQuitException
@@ -326,32 +326,32 @@ public class TestExceptions {
     @Test
     public void testFoundQuitException() {
         thrown.expect(FoundQuitException.class);
-        App.InputStringArray = SetupBot.splitSafe(" quit");
+        App.InputStringArray = Converter.splitSafe(" quit");
     }
     @Test
     public void testFoundQuitException2() {
         thrown.expect(FoundQuitException.class);
-        App.InputStringArray = SetupBot.splitSafe(" 2+quit");
+        App.InputStringArray = Converter.splitSafe(" 2+quit");
     }
     @Test
     public void testFoundQuitException3() {
         thrown.expect(FoundQuitException.class);
-        App.InputStringArray = SetupBot.splitSafe(" qqquittt");
+        App.InputStringArray = Converter.splitSafe(" qqquittt");
     }
     @Test
     public void testFoundQuitException4() {
         thrown.expect(FoundQuitException.class);
-        App.InputStringArray = SetupBot.splitSafe(" quittttt");
+        App.InputStringArray = Converter.splitSafe(" quittttt");
     }
     @Test
     public void testFoundQuitException5() {
         thrown.expect(FoundQuitException.class);
-        App.InputStringArray = SetupBot.splitSafe(" 20xFqquit+");
+        App.InputStringArray = Converter.splitSafe(" 20xFqquit+");
     }
     @Test
     public void testFoundQuitException6() {
         thrown.expect(FoundQuitException.class);
-        App.InputStringArray = SetupBot.splitSafe(" 2    2  +             quit");
+        App.InputStringArray = Converter.splitSafe(" 2    2  +             quit");
     }
 /**
  * TESTING EmpyEntryException
@@ -359,11 +359,11 @@ public class TestExceptions {
 @Test
 public void testEmptyEntryException() {
     thrown.expect(EmptyEntryException.class);
-    App.InputStringArray = SetupBot.splitSafe("");
+    App.InputStringArray = Converter.splitSafe("");
 }
     @Test
     public void testEmptyEntryException2() {
         thrown.expect(EmptyEntryException.class);
-        App.InputStringArray = SetupBot.splitSafe("                            ");
+        App.InputStringArray = Converter.splitSafe("                            ");
     }
 }

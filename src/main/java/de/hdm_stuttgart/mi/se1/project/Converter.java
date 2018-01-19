@@ -2,224 +2,16 @@ package de.hdm_stuttgart.mi.se1.project;
 
 import de.hdm_stuttgart.mi.se1.exceptions.*;
 
-public class SetupBot {
-    public static StringBuffer preOperatorBuffer = new StringBuffer("");
+public class Converter {
     /**
-     * currentIndex is used, by the methods sort and solve,
-     * to communicate until which index the input is evaluated
-     * and control if the sort / solve process is finished
+     * @param undefinedNumber parses the <String>undefinedNumber</String> and builds up
+     *                        a double value by decimal places
+     * @return <Double>undefinedNumber converted to double</Double>
+     * @throws ExceptionCluster throws exception if pi or e Literal are used wrong
+     *                          or a NumberStructureException occurs
      */
-    public static int currentIndex = 0;
-    public static boolean reading = true;
-    public static boolean failed = false;
-
-    /** the sort method analyzes the input Array until the first set of operators
-     * and sorts them into 2 data structures (operators to an array and number
-     * into a stack)
-     *
-     * numbers get converted from String to a double number value by convertLiterals method
-     *
-     * when the first part of the input is sorted the sort method activates solve,
-     * which calculates the current sorted part.
-     *
-     * @param unsortedStringSplit input which gets analyzed and calculated
-     * @throws ExceptionCluster super class of the personal exceptions,
-     * whenever a self-written exception gets thrown, it'll be passed to the main
-     *
-     */
-    static public void sort(String[] unsortedStringSplit) throws ExceptionCluster {
-        while (reading) {
-
-            for (int i = currentIndex; i < unsortedStringSplit.length; i++) {
-                if (isOperator(unsortedStringSplit[i])) {
-                    SetupBot.preOperatorBuffer.append(unsortedStringSplit[i]).append(" ");
-                    for (int j = i + 1; j < unsortedStringSplit.length; j++) {
-                        if (!isOperator(unsortedStringSplit[j])) {
-                            reading = false;
-                            break;
-                        }
-                    }
-                    currentIndex++;
-                    if (i == unsortedStringSplit.length - 1) {
-                        reading = false;
-                    }
-
-                } else {
-
-                    App.calculationNumbersStack.push(SetupBot.convertLiterals(unsortedStringSplit[i]));
-
-                    currentIndex++;
-                    if (i == unsortedStringSplit.length - 1) {
-                        reading = false;
-                    }
-                }
-                if (!reading) {
-                    break;
-                }
-            }
-        }
-        if (!failed) {
-            App.operatorArray = SetupBot.preOperatorBuffer.toString().split(" ");
-            SetupBot.solve(unsortedStringSplit);
-        }
-    }
-
-    /**
-     * solve activates operators one after another or throws an exception.
-     * It is guaranteed that activateBinaryOperators and activateUnaryOperator only get operators as input.
-     * The last result will be still in the memory location for numbers.
-     * After the current part of the user-entry is calculated,solve puts sort into reading mode
-     * and tells sort thereby to analyze the next part of the user-entry or sets the final result
-     * that can be read out and finishes the sort-solve process.
-     *
-     *
-     * @param unsortedStringSplit the parameter is passed through sort to solve to allow solve
-     *                            to fulfil the constructor of sort. At the same time the parameter
-     *                            allows to get specific information about the Array in the process.
-     *                            solve is only used by the sort method.
-     * @throws ExceptionCluster solve passes through the OperatorLimitException in activateBinaryOperator
-     *                          by the binary operators in MathOperation.class.
-     *                          Solve itself throws JustOperatorException when there were no numbers
-     *                          in the currently analyzed part.
-     */
-    private static void solve(String[] unsortedStringSplit) throws ExceptionCluster {
-        for (int i = 0; i < App.operatorArray.length; i++) {
-            if (!App.calculationNumbersStack.empty()) {
-                activateBinaryOperator(App.operatorArray[i]);
-                activateUnaryOperator(App.operatorArray[i]);
-            } else {
-                throw new JustOperatorsException();
-            }
-        }
-        SetupBot.preOperatorBuffer = new StringBuffer("");
-        App.operatorArray = null;
-        reading = true;
-
-        if (SetupBot.currentIndex == unsortedStringSplit.length && App.calculationNumbersStack.size() != 0) {
-            App.result = App.calculationNumbersStack.peek();
-            reading = false;
-        } else if (SetupBot.currentIndex != unsortedStringSplit.length) {
-            SetupBot.sort(unsortedStringSplit);
-        }
-    }
-
-    /**
-     * before showing the result the method checks if there was only 1 number in the memory location
-     * and throws exception if it was more double value that could ve been saved in the result.
-     *
-     * @throws InputUnbalancedException there are too many numbers
-     *                                  in the calculation stack before the result can be printed
-     */
-    public static void showResult() throws InputUnbalancedException {
-        if (!SetupBot.failed) {
-            if (App.calculationNumbersStack.size() == 1) {
-                System.out.println("RESULT: " + (char) 27 + "[34m" + App.result + (char) 27 + "[0m" + "\n");
-            } else if (App.calculationNumbersStack.size() > 1) {
-                throw new InputUnbalancedException();
-            }
-        }
-    }
-
-    /**
-     * Helping Method for the filter-process
-     *
-     * @param undefinedString takes input String into a Switch
-     *                        and compares it with the defined Operators
-     * @return boolean
-     * <p>
-     * boolean==true if String is a defined operator
-     * boolean==false if String is not a defined operator
-     */
-
-    private static boolean isOperator(String undefinedString) {
-        switch (undefinedString) {
-            case "+":
-            case "-":
-            case "*":
-            case "/":
-            case "pow":
-            case "~":
-
-            case "sin":
-            case "cos":
-            case "tan":
-            case "exp":
-            case "ln":
-            case "sqrt":
-                return true;
-
-            default:
-                return false;
-
-
-        }
-    }
-
-    /**
-     * @param undefinedCalculationOperation compares parameter with all binary switch cases
-     *                                      does nothing if undefinedCalculationOperation is not a binary operator
-     *                                      activates the binary MathOperation if is found
-     */
-    private static void activateBinaryOperator(String undefinedCalculationOperation) throws ExceptionCluster {
-        switch (undefinedCalculationOperation) {
-            case "+":
-                MathOperation.add();
-                break;
-            case "-":
-                MathOperation.subtract();
-                break;
-            case "*":
-                MathOperation.multiply();
-                break;
-            case "/":
-                MathOperation.divide();
-                break;
-            case "pow":
-                MathOperation.pow();
-                break;
-
-            default:
-                break;
-
-        }
-    }
-
-    /**
-     * @param undefinedCalculationOperation compares parameter with all unary switch cases
-     *                                      does nothing if undefinedCalculationOperation is not a unary operator
-     *                                      activates the unary MathOperation if is found
-     */
-    private static void activateUnaryOperator(String undefinedCalculationOperation) {
-        switch (undefinedCalculationOperation) {
-            case "~":
-                MathOperation.unarySubtraction();
-                break;
-            case "sin":
-                MathOperation.sine();
-                break;
-            case "cos":
-                MathOperation.cosine();
-                break;
-            case "tan":
-                MathOperation.tangent();
-                break;
-            case "exp":
-                MathOperation.exponential();
-                break;
-            case "ln":
-                MathOperation.logE();
-                break;
-            case "sqrt":
-                MathOperation.squareRoot();
-                break;
-            default:
-                break;
-        }
-    }
-
-
     // method for tracking Literals such as binary hexa or 2E10 -> JavaDOc
-    private static double convertLiterals(String undefinedNumber) throws ExceptionCluster {
+    public static double convertLiterals(String undefinedNumber) throws ExceptionCluster {
 
         StringBuilder preparedNumber = new StringBuilder("");
         StringBuilder errorCalls = new StringBuilder("");
@@ -315,14 +107,11 @@ public class SetupBot {
                         if (i == 0 && exponentialLiteralIndex == 1 || i == 1 && numberValue == 0 && i == exponentialLiteralIndex - 1 && !(checkIfIndexIs(0, '0', undefinedNumber))) {
                             numberValue = numberValue + Math.E;
                         } else {
-                            //TODO what is when "e" stands within of a word which is  wrong as a whole
                             throw new LiteralAbuseException("\nCharacter:'e' at Index " + i + " of " + undefinedNumber + " is a literal for the euler number" +
                                     "\n>>||the euler number is a Value itself and can not be a Part of a number||");
                         }
                         break;
-                    //TODO case pi use LiteralAbuseException if not first to or 2nd and 3rd character are p i
-                    //TODO if pi use Math.PI , almost the same if conditions as the 'e' Literal
-                    //TODO -pi and piE2 should be possible refer e Literal
+
                     case 'p':
                         if (!checkIfIndexIs((i + 1), 'i', undefinedNumber)) {
                             errorCalls.append("\nCharacter:").append(undefinedNumber.charAt(i)).append(" at Index ").append(i).append(" of ").append(undefinedNumber).append(" is an unknown symbol ").append("\n>>||please, only enter the allowed characters (0-9 , e , E , ',' , '.' , -)||").append("\n  ||for numbers or hexadecimal/binary numbers                              ||");
@@ -507,15 +296,17 @@ public class SetupBot {
         }
     }
 
-    /** helper method used to check two characters in sequence no matter if the second character index
+
+    /**
+     * Helper method used to check two characters in sequence no matter if the second character index
      * is outside of the String
      *
-     * @param index the index that needs to be checked
-     * @param character the character that is looked for at the indec
+     * @param index           The index that needs to be checked
+     * @param character       The character that is looked for at the indec
      * @param undefinedNumber String in which the character is looked for
-     * @return boolean which tells if at the character is found at a specific index
-     *         true when it is the character and false when it was not found or the index is
-     *         out of range of the given string
+     * @return Boolean which tells if at the character is found at a specific index
+     * true when it is the character and false when it was not found or the index is
+     * out of range of the given string
      */
     static private boolean checkIfIndexIs(int index, char character, String undefinedNumber) {
         try {
@@ -525,7 +316,14 @@ public class SetupBot {
             return false;
         }
     }
-
+    /**
+     *
+     * @param insecureString Removing all blanks
+     * @return secureInput changed into an String[] after being checked by alertQuit
+     * @throws ExceptionCluster EmptyEntryException thrown by splitSafe when
+     *                          the entry was empty or filled  with blanks.
+     *                          Throws the FoundQuitException of splitSafe.
+     */
     static public String[] splitSafe(String insecureString) throws ExceptionCluster {
         String[] unsecureStringArray = insecureString.split(" ");
         if (unsecureStringArray.length != 0 && !insecureString.equals("")) {
@@ -539,29 +337,38 @@ public class SetupBot {
             return secureInput.toString().split(" ");
         } else {
             throw new EmptyEntryException();
-
         }
     }
 
-    static private void alertQuit(String secureInputString) {
+    /**
+     * Looking for the word "quit" in the secureInputString
+     * and triggers an exception when it is found.
+     * @param secureInputString Looking for the word
+     *                          "quit" in the parameter
+     *
+     * @throws FoundQuitException When this exception is thrown the
+     *                            program will start a request if
+     *                            he really wants to quit.
+     */
+
+    static private void alertQuit(String secureInputString) throws FoundQuitException {
         int firstQIndex = secureInputString.indexOf('q');
         int endOfString = secureInputString.length() - 1;
 
         while (firstQIndex < endOfString) {
-            if (secureInputString.indexOf('q') != -1) {
+            if (firstQIndex != -1) {
                 if (checkIfIndexIs(firstQIndex + 1, 'u', secureInputString)
                         && checkIfIndexIs(firstQIndex + 2, 'i', secureInputString)
                         && checkIfIndexIs(firstQIndex + 3, 't', secureInputString)
                         ) {
                     throw new FoundQuitException();
                 } else {
-                    firstQIndex = secureInputString.indexOf('q', firstQIndex+1);
+                    firstQIndex = secureInputString.indexOf('q', firstQIndex + 1);
                 }
             } else {
                 break;
             }
         }
     }
-
 }
 

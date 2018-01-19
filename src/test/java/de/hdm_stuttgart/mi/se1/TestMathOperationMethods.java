@@ -2,8 +2,7 @@ package de.hdm_stuttgart.mi.se1;
 
 import static org.junit.Assert.*;
 
-import de.hdm_stuttgart.mi.se1.project.App;
-import de.hdm_stuttgart.mi.se1.project.SetupBot;
+import de.hdm_stuttgart.mi.se1.project.Calculator;
 import org.junit.After;
 import org.junit.Test;
 
@@ -20,11 +19,10 @@ public class TestMathOperationMethods {
     @SuppressWarnings("Duplicates")
     @After
     public void resetAll() {
-        SetupBot.currentIndex = 0;
-        SetupBot.failed = false;
-        SetupBot.reading = true;
-        App.calculationNumbersStack = new Stack<>();
-        SetupBot.preOperatorBuffer = new StringBuffer("");
+        Calculator.currentIndex = 0;
+        Calculator.reading = true;
+        Calculator.calculationNumbersStack = new Stack<>();
+        Calculator.preOperatorBuffer = new StringBuffer("");
 
     }
 
@@ -38,12 +36,12 @@ public class TestMathOperationMethods {
     private static double testHelper(String testString) {
         String[] testArray = testString.split(" ");
         try {
-            SetupBot.sort(testArray);
+            Calculator.sort(testArray);
         } catch (Exception e) {
 
         }
 
-        return App.result;
+        return Calculator.result;
     }
 
     /**
