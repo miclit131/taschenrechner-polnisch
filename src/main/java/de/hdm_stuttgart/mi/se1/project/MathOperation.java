@@ -6,11 +6,11 @@ import de.hdm_stuttgart.mi.se1.exceptions.OperatorLimitException;
 /**
  * Methods calculating with values from solve method.
  * binary operators: takes 2 top-most items of App.calculationNumbersStack
- *                   executes binary calculation
- *                   puts the answer on top of App.calculationNumbersStack
+ * executes binary calculation
+ * puts the answer on top of App.calculationNumbersStack
  * unary operators:  takes top-most item of App.calculationNumbersStack
- *                   executes unary calculation
- *                   puts result on top of App.calculationNumbersStack<Double>
+ * executes unary calculation
+ * puts result on top of App.calculationNumbersStack<Double>
  */
 class MathOperation {
 
@@ -47,7 +47,7 @@ class MathOperation {
     /**
      * Second number is divided by first number.
      */
-    //TODO what happens if the second number is zero?
+
     public static void divide() throws OperatorLimitException {
         if (Calculator.calculationNumbersStack.size() >= 2) {
             double a = Calculator.calculationNumbersStack.pop();

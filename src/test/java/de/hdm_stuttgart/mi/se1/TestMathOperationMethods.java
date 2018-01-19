@@ -3,6 +3,7 @@ package de.hdm_stuttgart.mi.se1;
 import static org.junit.Assert.*;
 
 import de.hdm_stuttgart.mi.se1.project.Calculator;
+import de.hdm_stuttgart.mi.se1.project.Converter;
 import org.junit.After;
 import org.junit.Test;
 

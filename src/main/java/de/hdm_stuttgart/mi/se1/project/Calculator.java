@@ -18,12 +18,13 @@ public class Calculator {
     public static boolean reading = true;
     public static StringBuffer preOperatorBuffer = new StringBuffer("");
 
-    /** The sort method analyzes the input Array until the first set of operators
+    /**
+     * The sort method analyzes the input Array until the first set of operators
      * and sorts them into 2 data structures (operators to a String[] and number
      * into a stack<double>).
-     *
+     * <p>
      * Numbers get converted from String to a double number value by convertLiterals method.
-     *
+     * <p>
      * When the first part of the input is sorted the sort method activates solve,
      * which calculates the current sorted part.
      *
@@ -63,8 +64,8 @@ public class Calculator {
                 }
             }
         }
-            Calculator.operatorArray = Calculator.preOperatorBuffer.toString().split(" ");
-            solve(unsortedStringSplit);
+        Calculator.operatorArray = Calculator.preOperatorBuffer.toString().split(" ");
+        solve(unsortedStringSplit);
     }
 
     /**
@@ -74,7 +75,6 @@ public class Calculator {
      * After the current part of the user-entry is calculated,solve puts sort into reading mode
      * and tells sort thereby to analyze the next part of the user-entry or sets the final result
      * that can be read out and finishes the sort-solve process.
-     *
      *
      * @param unsortedStringSplit The parameter is passed through sort to solve to allow solve
      *                            to fulfil the constructor of sort. At the same time the parameter
@@ -115,12 +115,12 @@ public class Calculator {
      *                                  in the calculation stack before the result can be printed.
      */
     public static void showResult() throws InputUnbalancedException {
-            if (Calculator.calculationNumbersStack.size() == 1) {
-                System.out.println("RESULT: " + (char) 27 + "[34m" + Calculator.result + (char) 27 + "[0m" + "\n");
-            } else if (Calculator.calculationNumbersStack.size() > 1) {
-                throw new InputUnbalancedException();
-            }
+        if (Calculator.calculationNumbersStack.size() == 1) {
+            System.out.println("RESULT: " + (char) 27 + "[34m" + Calculator.result + (char) 27 + "[0m" + "\n");
+        } else if (Calculator.calculationNumbersStack.size() > 1) {
+            throw new InputUnbalancedException();
         }
+    }
 
     /**
      * Helping Method for the filter-process
