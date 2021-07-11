@@ -15,7 +15,4 @@ of your terminal to ..\taschenrechner-polnisch\out (memory place of the jar), ..
 means the path on which u travel to get to the downloaded
 file and then use the command: java jar- taschenrechner_polnisch.jar
 
-4.have fun testing it :) and if you are bored try to crash it.
-The program should be unbreakable.
-
 
